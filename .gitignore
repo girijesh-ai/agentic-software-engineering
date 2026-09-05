@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+
+# Upload artifacts from the initial checkout, superseded by docs/ tools/ units/ tracks/.
+/.stale-flat-export/
+/agentic-software-engineering.tar.gz
+/files.zip
+/files2.zip

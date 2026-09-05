@@ -1,0 +1,59 @@
+name: gates
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout course
+        uses: actions/checkout@v4
+
+      - name: Checkout spec-driven-engineering plugin
+        uses: actions/checkout@v4
+        with:
+          repository: girijesh-ai/spec-driven-engineering
+          path: external/spec-driven-engineering
+
+      - name: audit.sh
+        id: audit
+        continue-on-error: true
+        run: |
+          chmod +x tools/audit.sh
+          tools/audit.sh
+
+      - name: spec_lint.py
+        id: spec_lint
+        continue-on-error: true
+        run: python3 tools/spec_lint.py docs/COURSE-SPEC.md
+
+      - name: check_skills_map.py
+        id: skills_map
+        continue-on-error: true
+        run: >
+          python3 tools/check_skills_map.py
+          --plugin-dir spec-driven-engineering=external/spec-driven-engineering
+
+      - name: check_coverage.py
+        id: coverage
+        continue-on-error: true
+        run: python3 tools/check_coverage.py --allow-planned
+
+      # Each gate runs regardless of the others so one red gate never hides
+      # the state of the rest - see AGENTS.md "record every failure".
+      - name: Report gate results
+        if: always()
+        run: |
+          echo "audit.sh:            ${{ steps.audit.outcome }}"
+          echo "spec_lint.py:         ${{ steps.spec_lint.outcome }}"
+          echo "check_skills_map.py:  ${{ steps.skills_map.outcome }}"
+          echo "check_coverage.py:    ${{ steps.coverage.outcome }}"
+          if [ "${{ steps.audit.outcome }}" != "success" ] || \
+             [ "${{ steps.spec_lint.outcome }}" != "success" ] || \
+             [ "${{ steps.skills_map.outcome }}" != "success" ] || \
+             [ "${{ steps.coverage.outcome }}" != "success" ]; then
+            echo "one or more gates failed"
+            exit 1
+          fi

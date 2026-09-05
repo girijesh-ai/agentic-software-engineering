@@ -1,0 +1,253 @@
+{
+  "$comment": "Binding between course capabilities and plugin skills. See docs/PLUGIN-CONTRACT.md. Units declare capabilities; this file is the only place capability -> skill is decided, so a plugin rename costs one edit here rather than twenty in prose. Multi-plugin: a third-party plugin enters the course only when it is the reference implementation of a concept the course already teaches. See docs/PLUGIN-CONTRACT.md section 9.",
+  "plugins": {
+    "spec-driven-engineering": {
+      "repo": "https://github.com/girijesh-ai/spec-driven-engineering",
+      "role": "spine",
+      "required": true,
+      "tested_against": "1.0.1",
+      "tested_on": "2026-09-05",
+      "note": "The course's workflow. Installed in B1, used for everything after."
+    },
+    "ponytail": {
+      "repo": "https://github.com/DietrichGebert/ponytail",
+      "role": "reference-implementation",
+      "required": false,
+      "tested_against": null,
+      "tested_on": null,
+      "note": "Optional. Cited in C1 as a worked guide (the rung ladder), in C3 as a worked inferential sensor (ponytail-review / ponytail-audit), and in C4 as a published ablation with a public correction. Pairs with engineering-standards' YAGNI check rather than replacing it."
+    }
+  },
+  "capabilities": {
+    "workflow-routing": {
+      "skills": [
+        "dev-workflow"
+      ],
+      "units": [
+        "a2"
+      ],
+      "note": "Routing table from 'where the work is' to the right skill.",
+      "plugin": "spec-driven-engineering"
+    },
+    "issue-intake": {
+      "skills": [
+        "triage-issues"
+      ],
+      "units": [
+        "b1"
+      ],
+      "note": "Most bad specs start as unexamined tickets.",
+      "plugin": "spec-driven-engineering"
+    },
+    "domain-vocabulary": {
+      "skills": [
+        "domain-modeling"
+      ],
+      "units": [
+        "b1"
+      ],
+      "note": "Ambiguous terms produce confident, coherent, wrong software.",
+      "plugin": "spec-driven-engineering"
+    },
+    "spec-authoring": {
+      "skills": [
+        "spec-from-idea"
+      ],
+      "units": [
+        "b1"
+      ],
+      "note": "The behaviour harness. B1's whole thesis rests on this.",
+      "plugin": "spec-driven-engineering"
+    },
+    "spec-pressure-test": {
+      "skills": [
+        "grill-me"
+      ],
+      "units": [
+        "b1",
+        "d4"
+      ],
+      "note": "Also used on rollout plans in D4.",
+      "plugin": "spec-driven-engineering"
+    },
+    "plan-authoring": {
+      "skills": [
+        "plan-from-spec"
+      ],
+      "units": [
+        "b2"
+      ],
+      "plugin": "spec-driven-engineering"
+    },
+    "architecture-lens": {
+      "skills": [
+        "codebase-architecture"
+      ],
+      "units": [
+        "b2",
+        "b4",
+        "c3"
+      ],
+      "note": "Same lens before code exists and after.",
+      "plugin": "spec-driven-engineering"
+    },
+    "implementation-loop": {
+      "skills": [
+        "implement"
+      ],
+      "units": [
+        "b3"
+      ],
+      "plugin": "spec-driven-engineering"
+    },
+    "test-first": {
+      "skills": [
+        "test-driven-development"
+      ],
+      "units": [
+        "b3"
+      ],
+      "plugin": "spec-driven-engineering"
+    },
+    "code-standards": {
+      "skills": [
+        "engineering-standards"
+      ],
+      "units": [
+        "b3",
+        "b4",
+        "c3"
+      ],
+      "note": "C3 exists partly because this states rules nothing enforces.",
+      "plugin": "spec-driven-engineering"
+    },
+    "systematic-debugging": {
+      "skills": [
+        "debug-systematically"
+      ],
+      "units": [
+        "b3",
+        "d2"
+      ],
+      "plugin": "spec-driven-engineering"
+    },
+    "spec-axis-review": {
+      "skills": [
+        "review-code"
+      ],
+      "units": [
+        "b4"
+      ],
+      "note": "Two-axis review; reports a missing spec rather than assuming it satisfied.",
+      "plugin": "spec-driven-engineering"
+    },
+    "branch-landing": {
+      "skills": [
+        "finish-branch"
+      ],
+      "units": [
+        "b5"
+      ],
+      "plugin": "spec-driven-engineering"
+    },
+    "conflict-resolution": {
+      "skills": [
+        "resolve-merge-conflicts"
+      ],
+      "units": [
+        "b5",
+        "c5"
+      ],
+      "note": "Becomes critical the moment parallel worktrees are in play.",
+      "plugin": "spec-driven-engineering"
+    },
+    "session-handoff": {
+      "skills": [
+        "handoff"
+      ],
+      "units": [
+        "b5",
+        "c5"
+      ],
+      "plugin": "spec-driven-engineering"
+    },
+    "agent-authoring": {
+      "skills": [
+        "writing-for-agents"
+      ],
+      "units": [
+        "c2",
+        "c6"
+      ],
+      "note": "Governs how the reader authors AGENTS.md, docs, and their own skills.",
+      "plugin": "spec-driven-engineering"
+    },
+    "overbuild-audit": {
+      "plugin": "ponytail",
+      "skills": [
+        "ponytail-review",
+        "ponytail-audit"
+      ],
+      "units": [
+        "c3",
+        "c4"
+      ],
+      "optional": true,
+      "note": "An inferential sensor for over-engineering, run against a diff or a whole repo. C3 uses it as the worked example of a sensor you did not write; C4 uses its benchmark as the worked example of an honest ablation."
+    },
+    "minimality-guide": {
+      "plugin": "ponytail",
+      "skills": [
+        "ponytail"
+      ],
+      "units": [
+        "c1",
+        "b3"
+      ],
+      "optional": true,
+      "note": "The rung ladder is a feedforward guide in the Bockeler sense - it steers before the agent writes, rather than grading after."
+    }
+  },
+  "expected_gaps": {
+    "$comment": "Capabilities the curriculum reaches for that the plugin does not yet provide. Not errors. See docs/SKILLS-MAP.md gap analysis. When one of these lands in the plugin, move it into capabilities and follow the intake process in docs/PLUGIN-CONTRACT.md section 3.",
+    "harness-audit": {
+      "units": [
+        "c1"
+      ],
+      "would_replace": "manual coverage-map exercise"
+    },
+    "sensor-authoring": {
+      "units": [
+        "c3"
+      ],
+      "would_replace": "hand-rolled linter lab"
+    },
+    "spec-linting": {
+      "units": [
+        "b1",
+        "c4"
+      ],
+      "would_replace": "tools/spec_lint.py invoked directly",
+      "note": "Highest priority. spec-from-idea currently emits criteria nothing checks."
+    },
+    "change-measurement": {
+      "units": [
+        "c4"
+      ],
+      "would_replace": "tools/ablation.py invoked directly"
+    },
+    "doc-gardening": {
+      "units": [
+        "c2"
+      ],
+      "would_replace": "manual staleness sweep"
+    },
+    "repo-comprehension": {
+      "units": [
+        "b0"
+      ],
+      "would_replace": "manual repo-mapping exercise",
+      "note": "Onboarding an agent to a large existing codebase. No skill in the plugin covers brownfield comprehension; codebase-architecture assumes you already understand the shape."
+    }
+  }
+}

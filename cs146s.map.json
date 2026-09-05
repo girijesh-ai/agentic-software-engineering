@@ -1,0 +1,282 @@
+{
+  "$comment": "Every CS146S topic, mapped to the unit that covers it. This is the data behind the superset claim; tools/check_coverage.py is the gate. status: covered | deeper | planned | omitted | unverified. The gate fails on omitted and unverified, which is the point - a superset cannot have deliberate holes or unchecked weeks.",
+  "source": "Stanford CS146S \u2014 The Modern Software Developer",
+  "source_terms": [
+    "Fall 2025 (complete)",
+    "Fall 2026 (announced topics only)"
+  ],
+  "verified_on": "2026-09-05",
+  "evidence_quality": "secondary",
+  "evidence_note": "Week-by-week content derived from public materials and a third-party course writeup, not from the official syllabus PDF, except week 2, which is now verified directly against the official syllabus at themodernsoftware.dev/fall2025. Upgrade the rest to primary before publishing the superset claim.",
+  "claim": "superset",
+  "topics": [
+    {
+      "id": "w1.model-internals",
+      "week": 1,
+      "title": "Pre-training, SFT, RL; models need tokens to think",
+      "covered_by": [
+        "a1"
+      ],
+      "status": "covered",
+      "note": "Less depth on the training pipeline, more on converting capability holes into guides."
+    },
+    {
+      "id": "w1.swiss-cheese",
+      "week": 1,
+      "title": "Swiss cheese model of capability; reliability strategies",
+      "covered_by": [
+        "a1"
+      ],
+      "status": "deeper",
+      "note": "We use it as the justification for the whole harness discipline."
+    },
+    {
+      "id": "w2.agent-anatomy",
+      "week": 2,
+      "title": "Agent architecture and components; agent = model + harness",
+      "covered_by": [
+        "a2"
+      ],
+      "status": "deeper",
+      "note": "CS146S introduces the architecture; A2 unrolls the loop stage by stage, ties it to real Terminal-Bench evidence, and inventories what Claude Code already ships."
+    },
+    {
+      "id": "w2.tool-use",
+      "week": 2,
+      "title": "Tool use and function calling",
+      "covered_by": [
+        "a2",
+        "a5"
+      ],
+      "status": "deeper",
+      "note": "A2 covers tool selection as a loop stage; A5 goes further into interface design (consolidation, semantic outputs) with a tool-count ablation."
+    },
+    {
+      "id": "w2.mcp",
+      "week": 2,
+      "title": "MCP (Model Context Protocol)",
+      "covered_by": [
+        "a5"
+      ],
+      "status": "deeper",
+      "note": "CS146S reads an MCP introduction and sample servers; A5 adds when not to use MCP, code execution as an alternative, and measured tool-count effects."
+    },
+    {
+      "id": "w3.sync-async",
+      "week": 3,
+      "title": "Sync vs async agents; the semi-async dead zone",
+      "covered_by": [
+        "a4"
+      ],
+      "status": "covered"
+    },
+    {
+      "id": "w3.context-failures",
+      "week": 3,
+      "title": "Context poisoning, distraction, confusion, clash",
+      "covered_by": [
+        "a3"
+      ],
+      "status": "deeper",
+      "note": "We require reproducing all four, plus an ablation on tool count."
+    },
+    {
+      "id": "w3.defensive-prompting",
+      "week": 3,
+      "title": "Defensive prompting; typed languages as feedback signal",
+      "covered_by": [
+        "a4"
+      ],
+      "status": "covered"
+    },
+    {
+      "id": "w3.prompt-as-source",
+      "week": 3,
+      "title": "The prompt as source code; generated code as lossy projection",
+      "covered_by": [
+        "b1"
+      ],
+      "status": "deeper",
+      "note": "CS146S states it as a principle. B1 makes it operational and links it to the sensor gap."
+    },
+    {
+      "id": "w4.tool-design",
+      "week": 4,
+      "title": "Designing tool interfaces for agent consumption",
+      "covered_by": [
+        "a5"
+      ],
+      "status": "covered",
+      "note": "Gap found by the 2026-09-05 audit; A5 added to close it."
+    },
+    {
+      "id": "w4.team-knowledge",
+      "week": 4,
+      "title": "CLAUDE.md / AGENTS.md and encoding team knowledge",
+      "covered_by": [
+        "c2"
+      ],
+      "status": "deeper",
+      "note": "We add the map-not-manual split, a freshness linter and a doc gardener."
+    },
+    {
+      "id": "w5.product-principles",
+      "week": 5,
+      "title": "AI terminal product principles; market signals",
+      "covered_by": [
+        "appendix-landscape"
+      ],
+      "status": "planned",
+      "note": "Dated within a quarter and aimed at people building agent products. Covered in a dated, explicitly disposable appendix rather than a unit - superset by content, not by format."
+    },
+    {
+      "id": "w5.risk-tolerance",
+      "week": 5,
+      "title": "Strategic vs YOLO agent profiles; the guardrail trade-off",
+      "covered_by": [
+        "a4",
+        "d1"
+      ],
+      "status": "covered",
+      "note": "Kept deliberately. The YOLO agent winning is an uncomfortable result a constraint-focused course must sit with."
+    },
+    {
+      "id": "w6.attack-chains",
+      "week": 6,
+      "title": "SSRF, credential exfiltration, YOLO-mode self-modification",
+      "covered_by": [
+        "d1"
+      ],
+      "status": "covered"
+    },
+    {
+      "id": "w6.ai-scanning-limits",
+      "week": 6,
+      "title": "AI security scanning false-positive and variance data",
+      "covered_by": [
+        "d1",
+        "c4"
+      ],
+      "status": "deeper",
+      "note": "Also used in C4 as the canonical example of an uncalibrated inferential sensor."
+    },
+    {
+      "id": "w7.review-hierarchy",
+      "week": 7,
+      "title": "Review hierarchy; mental alignment below bug-finding",
+      "covered_by": [
+        "b4"
+      ],
+      "status": "covered"
+    },
+    {
+      "id": "w7.review-quadrant",
+      "week": 7,
+      "title": "Gold zone / human-only zone / annoyance zone",
+      "covered_by": [
+        "b4"
+      ],
+      "status": "deeper",
+      "note": "Plus two-axis review and the missing-spec governance rule."
+    },
+    {
+      "id": "w8.complexity-tax",
+      "week": 8,
+      "title": "Historical complexity tax across web architecture generations",
+      "covered_by": [
+        "b6"
+      ],
+      "status": "planned",
+      "note": "Was a deliberate omission. The superset constraint converts it into a commitment."
+    },
+    {
+      "id": "w8.generation-pipeline",
+      "week": 8,
+      "title": "Intent understanding, context assembly, generation, automated validation, stream manipulation",
+      "covered_by": [
+        "b6"
+      ],
+      "status": "planned",
+      "note": "Stream manipulation is a feedforward guide; validating generated UI is a genuinely hard sensor problem, which makes this fit the harness thesis rather than sit beside it."
+    },
+    {
+      "id": "w9.sre-inversion",
+      "week": 9,
+      "title": "SRE as software problem; toil budget; error budget",
+      "covered_by": [
+        "d2"
+      ],
+      "status": "covered"
+    },
+    {
+      "id": "w9.ai-native-ops",
+      "week": 9,
+      "title": "AI-assisted vs AI-native operations; dynamic runbooks",
+      "covered_by": [
+        "d2"
+      ],
+      "status": "deeper",
+      "note": "Plus the concrete work of making runtime legible to an agent."
+    },
+    {
+      "id": "w10.capstone",
+      "week": 10,
+      "title": "Final project (80% of grade)",
+      "covered_by": [
+        "capstone"
+      ],
+      "status": "covered"
+    },
+    {
+      "id": "f26.mcp",
+      "week": null,
+      "title": "MCP (Fall 2026 announced)",
+      "covered_by": [
+        "a5"
+      ],
+      "status": "covered"
+    },
+    {
+      "id": "f26.agent-skills",
+      "week": null,
+      "title": "Agent skills (Fall 2026 announced)",
+      "covered_by": [
+        "c6"
+      ],
+      "status": "deeper",
+      "note": "We teach authoring, description design, and evals against a no-skill baseline."
+    },
+    {
+      "id": "f26.spec-driven",
+      "week": null,
+      "title": "Spec-driven development (Fall 2026 announced)",
+      "covered_by": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5"
+      ],
+      "status": "deeper",
+      "note": "Five units and an installable 16-skill plugin."
+    },
+    {
+      "id": "f26.loop-engineering",
+      "week": null,
+      "title": "Loop engineering (Fall 2026 announced)",
+      "covered_by": [
+        "c5"
+      ],
+      "status": "covered"
+    },
+    {
+      "id": "f26.software-factory",
+      "week": null,
+      "title": "The software factory (Fall 2026 announced)",
+      "covered_by": [
+        "c5"
+      ],
+      "status": "covered"
+    }
+  ]
+}
