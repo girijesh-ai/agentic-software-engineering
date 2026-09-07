@@ -215,27 +215,71 @@ Traced to **SC-2** and **SC-3** in [`docs/COURSE-SPEC.md`](../../docs/COURSE-SPE
 
 ## 6. Our numbers
 
-> Placeholder. Must be filled with a real `results/authors-run.json` before this unit
-> ships — CI enforces it, per SC-6. Do not publish invented numbers; the credibility of
-> the course rests on this section being honest.
+Real run: `results/authors-run.json`, 60 invocations (4 arms × 5 tasks × 3 repeats),
+`claude` pinned to `claude-haiku-4-5` throughout, `--permission-mode acceptEdits`,
+against a fresh clone of
+[`tiangolo/full-stack-fastapi-template`](https://github.com/tiangolo/full-stack-fastapi-template)
+for each run. Tasks: add search to the items list, archive instead of hard-delete,
+per-account login rate limiting, an item-count endpoint, and blocking user deletion
+while items exist — five small, realistically underspecified backend tickets, each
+with its own pytest verifier written before any arm ran (`backend/tests/ablation/` in
+that clone). Verified 2026-09-07.
 
-Planned reporting shape, four arms:
-
-| Arm | Pass rate | Median turns | Wrong-problem failures | Cost/task |
+| Arm | Pass rate | Median agent wall (s) | Wrong-problem failures | Cost/task |
 |---|---|---|---|---|
-| Bare prompt | — | — | — | — |
-| Prompt + `CLAUDE.md` only | — | — | — | — |
-| Spec, unlinted | — | — | — | — |
-| Spec, linted + grilled | — | — | — | — |
+| Bare prompt | 73% (11/15) | 108.4 | not yet graded | not captured |
+| Prompt + `CLAUDE.md` only | 53% (8/15) | 66.1 | not yet graded | not captured |
+| Spec, unlinted | 100% (15/15) | 118.6 | not yet graded | not captured |
+| Spec, linted + grilled | 100% (15/15) | 100.0 | not yet graded | not captured |
 
-The column that matters is *wrong-problem failures*, and it needs a human grader,
-because by construction no automated check catches them — that's the unit's thesis.
-Grading protocol goes in `results/README.md`: two independent graders, published
-disagreement rate.
+`spec-unlinted` and `spec-linted-grilled` vs `no-harness`: **+26.7pp** pass rate each
+(95% CI +0.067 to +0.467 — effect detected, interval excludes zero). `prompt-only` vs
+`no-harness`: **-20.0pp** (95% CI -0.533 to +0.133 — inconclusive, interval crosses
+zero). n=15 per arm; treat the two resolved comparisons as real and the rest as noise
+until repeated.
 
-Our hypothesis is that pass rate barely separates arms two and three, while
-wrong-problem failures separate them sharply. If the data disagrees, the data wins and
-this unit gets rewritten.
+**The hypothesis in the previous version of this section was wrong.** It predicted
+pass rate would barely separate `prompt-only` from `spec-unlinted`. It doesn't barely
+separate them — a spec took this task set from 53% to 100%, the largest jump in the
+table. The data disagrees with the prediction, so the prediction is what's wrong, per
+this unit's own rule in §3.4 and §6's original commitment.
+
+**A second, unplanned null result: linting and grilling the spec made no measured
+difference here.** `spec-unlinted` and `spec-linted-grilled` scored identically, 100%,
+on every one of the five tasks. On this task set, at this n, having *any* written spec
+did the work; pressure-testing it further didn't move pass rate. That doesn't mean
+`spec_lint` and `grill-me` are worthless — SC-2 and SC-3 above are about whether a
+Success Criterion is falsifiable and covers failure behaviour, not about pass rate on
+tasks this small — but it does mean the pass-rate column can't be the evidence for why
+linting and grilling matter. That evidence, if it exists, is a *wrong-problem-failures*
+grading question, not a pytest question, which is exactly why that column exists.
+
+**`prompt-only` scoring below `no-harness` is real, not a bug.** The bare-prompt arm
+independently converged on the correct per-account (not per-IP) design for the
+rate-limiting task in 2 of 3 repeats without being told - Haiku 4.5 already knows the
+canonical mistake described in §2. The `CLAUDE.md`-only arm's one clean loss was an
+idempotency gap (`test_archiving_twice_is_not_an_error`) that only this spec's SC-3
+states explicitly; a paragraph of general engineering advice doesn't carry that
+specific a fact. This echoes the ecosystem note in `docs/ECOSYSTEM-MAP.md`: a
+prompt-only control can land *below* baseline, which a two-arm design (harness on/off)
+would never surface.
+
+**Wrong-problem failures - not yet graded.** This needs two independent human graders
+reading the diffs against intent, per the protocol below; that hasn't happened. It is
+the load-bearing column for this unit's thesis and its absence is a real gap, tracked
+in `AGENTS.md` § Known gaps, not papered over with a self-graded number. One informal
+spot-check while preparing this write-up: reading the `login-rate-limit` transcripts
+directly, most arms - including bare prompt - explicitly reasoned about per-account
+vs. per-IP and chose correctly, which is itself informative (the canonical failure
+mode in §2 is not this model's default failure mode on this task) but is not a
+substitute for the real protocol.
+
+**Cost/task - not captured.** `tools/ablation.py` records wall-clock time and
+pass/fail, not token cost. Adding it is a small, real gap (a follow-up, not done
+here) rather than an invented dollar figure.
+
+Grading protocol for the column above, once run: two independent graders, published
+disagreement rate, protocol in `results/README.md` (not yet written).
 
 ## 7. What makes this obsolete
 

@@ -94,12 +94,12 @@ Failing any of these means it doesn't merge, however good the prose is.
 
 Kept current so an agent doesn't rediscover them or paper over them:
 
-- `tools/audit.sh` exists and runs. One failure remains, below.
-- No `verify.sh` implementations yet. B1's is specified, not written.
-- No real ablation results anywhere. `units/b1-idea-to-spec` lacks the results file,
-  which is `audit.sh`'s one remaining failure.
-- Reference agent CLI undecided (`docs/COURSE-SPEC.md` open question 1).
-- Shared lab repo undecided (open question 2).
+- `tools/audit.sh` exits 0. B1 has a real `results/authors-run.json` (60 runs). Its
+  pre-registered hypothesis was falsified (a spec: 53% -> 100% pass rate, not
+  "barely"); *wrong-problem failures* still needs two human graders, see README §6.
+- `tools/ablation.py` records wall-clock and pass/fail, not token cost - a tool gap.
+- Reference agent CLI and shared lab repo are both **resolved** (`docs/COURSE-SPEC.md`
+  open questions 1-2): Claude Code; `tiangolo/full-stack-fastapi-template`.
 - CS146S evidence is secondary for 9 of 10 weeks (`check_coverage.py` COV006). W2 was
   verified against the live syllabus this session; the rest still need the same pass.
 - Architecture-audit findings F1-F6 are remediated (see that file's status table). The
