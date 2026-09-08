@@ -94,10 +94,10 @@ Failing any of these means it doesn't merge, however good the prose is.
 
 Kept current so an agent doesn't rediscover them or paper over them:
 
-- `tools/audit.sh` exits 0. B0 and B1 have real results (40, 60 runs). B1's
-  hypothesis was falsified (53% -> 100%); wrong-problem failures still need grading.
-- Running thread picked (B0): team-based item sharing, same repo B1 used (which
-  predates it by design; its 5 tasks are independent tickets). CLI also resolved.
+- `tools/audit.sh` exits 0. B0, B1, B2 have real results (40, 60, 30 runs). B1's and
+  B2's own hypotheses both ran inconclusive-to-opposite - read each README §6.
+- Running thread picked (B0), specced and planned for real (B2): team-based item
+  sharing, same repo B1 used (which predates the pick by design). B3 builds it next.
 - `tools/ablation.py` records wall-clock and pass/fail, not token cost - a tool gap.
 - Fall 2026 claim downgraded to `overlaps` (11 real gaps; `cs146s.map.json`
   `fall_2026_claim`), not written up as new units. Fall 2025 still holds, unweakened.
