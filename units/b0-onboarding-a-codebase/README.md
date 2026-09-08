@@ -4,7 +4,7 @@
 thread the rest of Track B and C build on.
 **Time.** ~2 hours. **Cost.** Under $5 in agent tokens.
 
-<!-- capabilities: repo-mapping, load-bearing-convention-analysis, history-mining -->
+<!-- capabilities: repo-comprehension -->
 **Serves.** SC-5. Also the unit that starts the running thread SC-11 depends on.
 
 ---
