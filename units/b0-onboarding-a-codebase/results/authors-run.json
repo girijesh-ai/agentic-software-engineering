@@ -1,0 +1,562 @@
+{
+  "schema_version": 1,
+  "module_id": "b0-onboarding-a-codebase",
+  "generated_at": "2026-09-08T02:37:08.428701+00:00",
+  "dry_run": false,
+  "config": {
+    "repeats": 4,
+    "timeout_sec": 600,
+    "agent_command": "claude -p \"$(cat {prompt_file})\" --permission-mode acceptEdits --model claude-haiku-4-5",
+    "arms": [
+      "no-map",
+      "with-map"
+    ],
+    "tasks": [
+      "permission-location",
+      "client-generation",
+      "migration-mechanism",
+      "test-env-gotcha",
+      "db-url-history"
+    ],
+    "verifiers": {
+      "permission-location": "python3 check_answer.py ANSWER.md items.py owner_id",
+      "client-generation": "python3 check_answer.py ANSWER.md generat openapi",
+      "migration-mechanism": "python3 check_answer.py ANSWER.md alembic migrat",
+      "test-env-gotcha": "python3 check_answer.py ANSWER.md FASTAPI_ENV development",
+      "db-url-history": "python3 check_answer.py ANSWER.md DATABASE_URL \"separate|2184|migrat\""
+    }
+  },
+  "runs": [
+    {
+      "arm": "no-map",
+      "task": "permission-location",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 38.25,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done! I've analyzed the repository and created `ANSWER.md` in the repo root documenting all authorization patterns.\n\n**Summary of findings:**\n- **5 files** contain authorization checks\n- **Two main patterns**:\n  1. **Role-based** (RBAC): `is_superuser` flag checks via `get_current_active_superuser` dependency\n  2. **Owner-based**: For items, access granted if `item.owner_id == current_user.id` or user is superuser\n\nThe file includes line numbers and specific implementations for each authorization check across items, users, and utility routes.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['items.py', 'owner_id']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "permission-location",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 37.92,
+      "verifier_wall_sec": 0.16,
+      "agent_tail": "Done. I've created `ANSWER.md` in the repo root documenting all authorization checks.\n\nThe codebase uses two patterns:\n1. **Dependency Injection** (`Depends(get_current_active_superuser)`) for superuser-only operations\n2. **Inline Ownership Checks** (`current_user.is_superuser or resource.owner_id == current_user.id`) for resource-level access control\n\nBoth patterns centralize decisions in `backend/app/api/deps.py` (JWT validation and superuser checks), `backend/app/api/routes/items.py` (item ownership), and `backend/app/api/routes/users.py` (user admin and profile access).\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['items.py', 'owner_id']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "permission-location",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 119.64,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done. I've created `ANSWER.md` in the repo root documenting all authorization and access control decision points. The file includes:\n\n- **Backend**: 7 locations across API dependencies, user routes, item routes, login routes, models, and CRUD operations\n- **Frontend**: 7 locations across authentication hooks, route guards, and conditional component rendering\n\nEach entry includes the file path and a one-sentence description of the authorization pattern used.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['items.py', 'owner_id']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "permission-location",
+      "repeat": 3,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 83.1,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done! I've created the `ANSWER.md` file in the repository root documenting all authorization patterns. The file contains 15 distinct locations where access control decisions are made:\n\n**Backend patterns (10):**\n- Dependency injection validation for superuser status\n- Query filtering by user role\n- Explicit permission checks (superuser OR ownership)\n- Role-based restrictions (preventing superuser self-deletion)\n- Identity checks (preventing user self-deletion)\n- FastAPI dependency decorators requiring superuser privileges\n\n**Frontend patterns (5):**\n- Conditional UI rendering based on superuser status\n- Route guards checking authentication status\n- Route guards checking superuser status\n- Route guards for auth pages (preventing logged-in users from accessing login/signup)\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['items.py', 'owner_id']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "client-generation",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 61.13,
+      "verifier_wall_sec": 0.13,
+      "agent_tail": "Done. I've created **ANSWER.md** in the repo root explaining:\n\n1. **Where the code comes from**: The frontend API client in `frontend/src/client/` is auto-generated from the backend's OpenAPI schema using `@hey-api/openapi-ts`. The generation script (`scripts/generate-client.sh`) extracts the schema from the FastAPI app, then runs the code generator to create types and services.\n\n2. **What happens if hand-edited**: Any manual edits to files in `frontend/src/client/` will be completely overwritten the next time `./scripts/generate-client.sh` runs. The `.gen.ts` files and auto-generated `index.ts` are always regenerated from scratch, so hand-edits are lost.\n\nThe answer also includes guidance on the proper way to extend the generated code (via hooks and utilities in other directories) and how to regenerate when the backend API changes.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['generat', 'openapi']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "client-generation",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 54.67,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done. I've created `ANSWER.md` in the repo root with a complete explanation of:\n\n1. **Where the code comes from**: The frontend API client is auto-generated from the backend's OpenAPI schema using `@hey-api/openapi-ts`\n2. **How it works**: FastAPI exposes the schema at `/api/v1/openapi.json`, and running `bun run generate-client` regenerates all `.gen.ts` files\n3. **What happens if hand-edited**: All changes are overwritten on the next regeneration\u2014the `.gen.ts` files are generated artifacts, not hand-maintained code\n4. **Correct workflow**: Modify the backend first (which updates the OpenAPI spec), then regenerate, or add custom code in separate files outside the generated directory\n\nThe documentation in `frontend/README.md` already covered this, and I've synthesized it into a clear guide for developers.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['generat', 'openapi']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "client-generation",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 61.0,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done. I've created `ANSWER.md` in the repo root explaining:\n\n1. **Where it comes from**: Auto-generated from the backend's OpenAPI spec using `@hey-api/openapi-ts`, configured in `frontend/openapi-ts.config.ts`\n\n2. **What happens if edited**: Any hand-edits to `.gen.ts` files are **lost on the next regeneration** because the generator reads the OpenAPI spec as the source of truth and overwrites everything from scratch\u2014it doesn't merge or preserve manual changes.\n\n3. **The workflow**: Regenerate with `bash ./scripts/generate-client.sh` after backend API changes, commit the output, and never edit `.gen.ts` files directly.\n\nThe file includes a table of consequences, the correct approach (fix the backend API spec, not the generated client), and why this matters for CI/CD.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['generat', 'openapi']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "client-generation",
+      "repeat": 3,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 67.31,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done. I've created `ANSWER.md` in the repo root explaining:\n\n1. **Where the code comes from**: Auto-generated by `@hey-api/openapi-ts` from the backend's OpenAPI schema (`http://localhost:8000/api/v1/openapi.json`)\n\n2. **Generation process**: The `scripts/generate-client.sh` script extracts the schema from the running backend, moves it to the frontend directory, and runs `bun run generate-client` to generate all TypeScript client files\n\n3. **What happens if edited**: All manual edits are lost when the code is regenerated. The generated files (marked with `// This file is auto-generated by @hey-api/openapi-ts`) are completely overwritten on each generation run\n\n4. **Correct practice**: Keep `frontend/src/client/` read-only. Extend the generated client by creating wrappers in `frontend/src/hooks/` or `frontend/src/lib/` instead\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['generat', 'openapi']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "migration-mechanism",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 65.4,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done! I've written `ANSWER.md` in the repo root explaining how SQLModel column changes are applied to Postgres.\n\n**The flow in a nutshell:**\n1. Developer adds a column to a SQLModel class\n2. Run `alembic revision --autogenerate` to generate a migration by comparing the current database state against `SQLModel.metadata`\n3. Alembic creates a migration script with SQL `ALTER TABLE` operations\n4. Run `alembic upgrade head` to execute pending migrations, applying the schema changes\n5. In production, `prestart.sh` automatically runs migrations before the app starts\n\nThe key insight: Alembic compares the running database (tracked by `alembic_version` table) against the target schema defined in SQLModel models, ensuring the database stays in sync with the code.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['alembic', 'migrat']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "migration-mechanism",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 54.64,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done. I've created `ANSWER.md` in the repo root explaining the complete flow for how new columns added to SQLModel tables get applied to Postgres.\n\nThe answer covers:\n1. **Model change** \u2014 editing the SQLModel definition in `app/models.py`\n2. **Migration generation** \u2014 `alembic revision --autogenerate` compares code to schema and creates a migration file\n3. **Migration execution** \u2014 `alembic upgrade head` applies the migration to Postgres\n4. **Automatic startup** \u2014 `prestart.sh` runs migrations before the app starts\n\nThe key insight: SQLModel models are *declarative specs*, not imperative commands. Alembic is what actually makes the database changes by running SQL.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['alembic', 'migrat']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "migration-mechanism",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 59.82,
+      "verifier_wall_sec": 0.13,
+      "agent_tail": "Done! I've created `ANSWER.md` in the repo root explaining how a new column added to a SQLModel table gets applied to a running Postgres database.\n\nThe explanation covers:\n\n1. **The decoupled architecture**: SQLModel defines the Python model; Alembic manages schema changes to Postgres\n2. **The 5-step workflow**: modify model \u2192 auto-generate migration \u2192 commit \u2192 apply manually \u2192 automatic on startup\n3. **Key mechanism**: Alembic compares your SQLModel metadata against the actual Postgres schema, generates a migration file with SQL commands, and runs it via `alembic upgrade head`\n4. **Automatic application**: The `prestart.sh` script runs migrations before the FastAPI server starts, so deployments automatically update the schema\n5. **Why it matters**: This separation enables safe production deployments with audit trails, rollback capability, and data transformation hooks\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['alembic', 'migrat']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "migration-mechanism",
+      "repeat": 3,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 56.72,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done. I've created `ANSWER.md` in the repo root explaining the full flow of how a new column added to a SQLModel table gets applied to the running Postgres database. The answer covers:\n\n1. **Adding the column** to the SQLModel class in `models.py`\n2. **Generating the migration** with `alembic revision --autogenerate`\n3. **Committing the migration** to version control\n4. **Running migrations on startup** via `prestart.sh` which executes `alembic upgrade head`\n5. **Database schema update** where Alembic executes the migration's SQL\n\nThe key insight: Alembic tracks schema changes through version-controlled migration files, auto-generates SQL operations by comparing SQLModel metadata to the current database, and applies them deterministically before the app starts.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['alembic', 'migrat']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "test-env-gotcha",
+      "repeat": 0,
+      "passed": false,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 82.71,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done. I've written `ANSWER.md` to the repo root explaining the issue:\n\n**Root cause:** The `env_file=\"../.env\"` path in `backend/app/core/config.py` is resolved relative to that file's location, so it looks for `.env` at `backend/app/.env` instead of the repository root where it actually lives. When pytest runs from `backend/`, pydantic_settings can't find the file, and the required environment variables (`SECRET_KEY`, `DATABASE_URL`, `PROJECT_NAME`, `FIRST_SUPERUSER`, `FIRST_SUPERUSER_PASSWORD`) are undefined, causing `Settings()` instantiation to fail during test collection.\n\n**Solutions provided:**\n1. Run from the repo root: `uv run pytest backend/tests`\n2. Set env vars explicitly in the shell command\n3. Fix the config path to `../../.env` (permanent fix)\n",
+      "verifier_tail": "FAIL: ANSWER.md is missing required terms: ['FASTAPI_ENV', 'development']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "test-env-gotcha",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 162.71,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done. I've created **ANSWER.md** at the repo root explaining the issue and solution.\n\n**Summary:**\n\nThe tests fail at import time because the config module has a validator that rejects default/placeholder secret values (like `SECRET_KEY=changethis`) unless `FASTAPI_ENV=development` is set. When running `uv run pytest` directly from the backend directory, this environment variable isn't properly loaded from the relative `.env` file path, causing the validator to reject the defaults.\n\n**Solution:** Set `FASTAPI_ENV=development` before running pytest:\n```bash\ncd backend\nFASTAPI_ENV=development uv run pytest\n```\n\nOr use the provided test script: `uv run bash scripts/test.sh`\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['FASTAPI_ENV', 'development']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "test-env-gotcha",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 64.53,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done. I've created `ANSWER.md` in the repo root explaining the issue.\n\n**Summary:** Tests fail at import time because the `app/core/config.py` module validates settings during instantiation, and the validator rejects default credentials (\"changethis\") from the `.env` file unless `FASTAPI_ENV=development` is set. This environment variable must be set to allow development-mode testing with example credentials.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['FASTAPI_ENV', 'development']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "test-env-gotcha",
+      "repeat": 3,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 128.89,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done. I've written `ANSWER.md` explaining why tests fail at collection time and what environment variables need to be set.\n\nThe core issue: when a developer runs `cd backend && uv run pytest` without environment variables, the config module tries to instantiate `Settings()` at import time. This requires several environment variables (`SECRET_KEY`, `PROJECT_NAME`, `DATABASE_URL`, etc.) that are defined in the `.env` file at the repo root. When running from the backend directory, the `.env` file path resolution doesn't work correctly, and pydantic's validation fails before any tests even start.\n\nThe solution is to either run from the repo root (`uv run pytest backend`) or explicitly set `FASTAPI_ENV=development` and other required variables (as the `scripts/test.sh` script does).\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['FASTAPI_ENV', 'development']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "db-url-history",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 17.81,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done. The repository was not always configured with a single DATABASE_URL\u2014it was refactored in commit 32ab6dd (August 2026) to migrate from separate variables (POSTGRES_SERVER, POSTGRES_PORT, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB) to a unified DATABASE_URL.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['DATABASE_URL', 'separate|2184|migrat']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "db-url-history",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 17.06,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done. The repository was not always structured with a single `DATABASE_URL`\u2014commit 32ab6dd shows it was migrated from separate `POSTGRES_*` environment variables to the unified `DATABASE_URL` approach.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['DATABASE_URL', 'separate|2184|migrat']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "db-url-history",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 20.41,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done. The repository was not always configured with a single `DATABASE_URL`\u2014it previously used separate `POSTGRES_SERVER`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, and `POSTGRES_DB` variables that were consolidated in commit `32ab6dd`.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['DATABASE_URL', 'separate|2184|migrat']\n"
+    },
+    {
+      "arm": "no-map",
+      "task": "db-url-history",
+      "repeat": 3,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 20.45,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done. I found the evidence in commit 32ab6dd (#2184, \"\u267b\ufe0f Migrate to `DATABASE_URL` instead of separate variables\"), which shows the repository previously used five separate environment variables (`POSTGRES_SERVER`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`) and migrated to the single `DATABASE_URL` configuration. The answer is now in `/ANSWER.md`.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['DATABASE_URL', 'separate|2184|migrat']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "permission-location",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 71.35,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done! I've created **ANSWER.md** in the repo root documenting all 19 authorization patterns found in the codebase:\n\n- **Backend** (14 patterns): JWT validation in `deps.py`, superuser checks via `get_current_active_superuser`, and inline owner-id checks scattered across item and user route handlers\n- **Frontend** (5 patterns): localStorage token checks, route guards using `beforeLoad`, conditional UI rendering based on `is_superuser` flag, and server-side filtering via API calls\n\nThe key finding matches the repo-map's note: permissions are **not centralized**\u2014every route handler repeats the same two-line check inline (`if not current_user.is_superuser and (item.owner_id != current_user.id)`), which is load-bearing architecture for this template.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['items.py', 'owner_id']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "permission-location",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 60.4,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done! I've created **ANSWER.md** in the repo root with all authorization decision points. The file documents:\n\n- **Backend authorization** in `deps.py` (JWT validation, superuser checks), `items.py` (owner-based access + superuser override), and `users.py` (superuser-only operations, self-profile access, self-deletion prevention)\n- **Frontend authorization** in route guards that check login status and superuser status, plus conditional UI rendering based on superuser flag\n\nEach entry includes the file path, line numbers, and a one-sentence description of the authorization pattern.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['items.py', 'owner_id']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "permission-location",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 87.35,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done! I've created `ANSWER.md` in the repo root with all authorization decision points.\n\nThe file documents **12 locations** where the repository decides whether a user can read or modify an item:\n\n- **2 centralized checks** in `deps.py` (JWT validation and superuser enforcement)\n- **10 inline checks** across route handlers in `items.py`, `users.py`, `login.py`, and `private.py`\n\nThe authorization patterns used are:\n- **Superuser bypass + owner check** (items can be read/modified by superuser OR owner)\n- **Decorator-based superuser-only** (users routes restrict operations to superusers)\n- **Self + superuser access** (users can read their own profile; superusers can read any user)\n- **No auth** (private endpoint intentionally unauthenticated)\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['items.py', 'owner_id']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "permission-location",
+      "repeat": 3,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 53.98,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done! I've created **ANSWER.md** in the repo root documenting all 18 authorization/access control decision points in the codebase. The file lists each location where the system decides if a user can read or modify an item, along with the specific pattern used (dependency injection guards, ownership checks with superuser bypass, role-based filtering, token verification, etc.).\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['items.py', 'owner_id']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "client-generation",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 23.02,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done. I've written `ANSWER.md` to the repo root explaining:\n\n1. **Origin**: The client code is automatically generated from the backend's OpenAPI schema via `scripts/generate-client.sh`, with a pre-commit hook (`generate-frontend-sdk`) that re-runs generation whenever backend files or the lock file change.\n\n2. **Consequences of hand-editing**: Hand edits are **silently discarded** (not rejected with an error) when the generation script runs next, making this a dangerous invisible failure mode. Changes vanish without warning when any backend file changes.\n\n3. **Correct approach**: To add new API methods to the frontend, modify the backend (routes or models), and the client regenerates automatically.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['generat', 'openapi']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "client-generation",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 38.22,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done. I've created `ANSWER.md` in the repo root explaining:\n\n1. **Where the code comes from**: It's auto-generated by `@hey-api/openapi-ts` from the backend's live OpenAPI schema. The pipeline extracts the schema by running the FastAPI app, then generates TypeScript client code.\n\n2. **The automatic trigger**: A pre-commit hook (`generate-frontend-sdk`) re-runs this generation whenever backend Python files, `pyproject.toml`, `uv.lock`, or the config changes.\n\n3. **What happens if someone hand-edits**: Hand edits are **silently discarded** \u2014 the generation hook overwrites them without error or warning. This is the dangerous failure mode: the edit looks successful at commit but vanishes the next time the hook runs, and the developer never sees the conflict.\n\n4. **The correct approach**: Change the backend contract first (Pydantic models in `models.py`, routes in `api/routes/`), and the frontend client regenerates automatically.\n\nThe document explains why this design exists: it prevents frontend/backend schema drift by making the OpenAPI contract the single source of truth.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['generat', 'openapi']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "client-generation",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 37.4,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done. I've created `ANSWER.md` explaining:\n\n1. **Where it comes from**: The `frontend/src/client/` code is generated by a pipeline that:\n   - Extracts the live OpenAPI schema from the running backend app\n   - Uses the `openapi-ts` tool to generate TypeScript client code\n   - Automatically re-runs via a pre-commit hook whenever backend routes, models, or dependencies change\n\n2. **What happens on hand-edits**: Any manual changes are **silently discarded** on the next regeneration. This is load-bearing behavior\u2014the failure mode is silent (not loud), making it invisible work. To actually add or modify API methods, you must edit the backend code, not the generated client.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['generat', 'openapi']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "client-generation",
+      "repeat": 3,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 54.24,
+      "verifier_wall_sec": 0.14,
+      "agent_tail": "Done. I've written `ANSWER.md` explaining:\n\n1. **Where the code comes from**: `frontend/src/client/` is generated by a 3-step pipeline \u2014 the script extracts the backend's live OpenAPI schema, runs it through the `@hey-api/openapi-ts` generator, and lints the result.\n\n2. **Automatic regeneration**: A pre-commit hook re-runs the generation whenever backend Python files, `uv.lock`, or the config changes.\n\n3. **What happens if someone hand-edits**: This is a **load-bearing issue**. Hand-edits are silently discarded and invisible \u2014 no error, no warning, just gone the next time the hook runs. This is worse than rejection because the work looks normal in git but disappears without trace.\n\n4. **The correct pattern**: Edit the backend (models, routes), then regenerate. API shape flows one direction.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['generat', 'openapi']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "migration-mechanism",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 64.65,
+      "verifier_wall_sec": 0.16,
+      "agent_tail": "Done. I've created `ANSWER.md` in the repo root explaining how a new SQLModel column reaches Postgres in three mandatory steps:\n\n1. **Define it in `models.py`** \u2014 this tells Python what the schema should be\n2. **Create an Alembic migration file** \u2014 this is the SQL blueprint for the change\n3. **Run the migration** \u2014 Alembic connects to Postgres, executes the SQL, and records completion\n\nThe answer walks through actual code from the repo (the `created_at` column example, the `env.py` setup, migration file structure) and explains why both steps 1 and 2 are **load-bearing**: skip the migration, and the column never appears in Postgres; skip updating the model, and the app ignores the existing column. This distinction is explicitly documented in the repo's `load-bearing.md` because it caused real test failures during development.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['alembic', 'migrat']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "migration-mechanism",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 45.1,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done. I've created `ANSWER.md` explaining the complete flow:\n\n**Key takeaway:** Adding a column to a SQLModel table requires two separate steps:\n1. **Edit the model** in `models.py` (Python only\u2014doesn't touch the database)\n2. **Create and apply an Alembic migration** (generates and runs the actual SQL)\n\nThe migration file is what executes `ALTER TABLE` in Postgres. Without it, the column exists in your Python code but not in the database\u2014it works in throwaway SQLite tests but fails in production Postgres, which is why this is a **load-bearing convention** in this codebase.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['alembic', 'migrat']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "migration-mechanism",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 65.18,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done! I've written `ANSWER.md` in the repo root explaining the full flow of how a new SQLModel column actually gets applied to Postgres in this codebase.\n\nThe short version: You add the column to `models.py`, generate an Alembic migration file (which contains the actual SQL ALTER TABLE command), commit both, and when the container starts, `prestart.sh` runs `alembic upgrade head` to apply all pending migrations to the live database. Alembic tracks which migrations have been applied in a `alembic_version` table in Postgres itself\u2014this is why the migration file is load-bearing (not optional), and why skipping it causes tests to pass locally on SQLite but fail against real Postgres.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['alembic', 'migrat']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "migration-mechanism",
+      "repeat": 3,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 53.0,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done. I've written **ANSWER.md** explaining how new columns added to SQLModel tables get applied to the running Postgres database.\n\nThe key points:\n1. **SQLModel metadata alone isn't enough**\u2014adding a field to `models.py` doesn't create the column in Postgres\n2. **Alembic migrations are required**\u2014a versioned Python file in `backend/app/alembic/versions/` must define the SQL DDL (e.g., `ALTER TABLE item ADD COLUMN status VARCHAR(50)`)\n3. **`alembic upgrade head` applies migrations**\u2014run at startup via `prestart.sh`, it executes all unapplied migrations in order and records progress in Postgres's `alembic_version` table\n4. **This is load-bearing**\u2014as documented in the repo itself, a field with no migration works in throwaway SQLite test DBs but breaks against real Postgres\n\nThe answer traces the full path from code to database, explains why it's necessary (Python metadata \u2260 database schema), and shows the migration chain that makes schema changes reproducible and reversible.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['alembic', 'migrat']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "test-env-gotcha",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 17.55,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done. The answer is in `ANSWER.md` in the repo root.\n\n**Summary:** Tests fail at import time because `FASTAPI_ENV=development` is not set. Without it, the FastAPI app tries to mount a `frontend/` static directory that doesn't exist in a bare backend checkout, causing an import-time exception before any tests can run. Setting `FASTAPI_ENV=development uv run pytest` fixes it.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['FASTAPI_ENV', 'development']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "test-env-gotcha",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 17.81,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done. ANSWER.md explains that without `FASTAPI_ENV=development`, the app initialization tries to mount a non-existent `frontend/` static directory at import time, causing immediate failure before pytest can collect any tests. The fix is to set that environment variable before running pytest.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['FASTAPI_ENV', 'development']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "test-env-gotcha",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 40.7,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done. I've created `ANSWER.md` in the repo root explaining the issue.\n\n**Summary:** Tests fail at import time because `backend/app/main.py` tries to mount a `frontend/` static directory that doesn't exist in a backend-only checkout. This happens when `conftest.py` imports the app. The fix is to set `FASTAPI_ENV=development` before running pytest, which allows the app to initialize without requiring the frontend files. This is a load-bearing convention documented in `load-bearing.md`.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['FASTAPI_ENV', 'development']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "test-env-gotcha",
+      "repeat": 3,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 16.4,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done. The issue is that `FASTAPI_ENV=development` must be set when running tests, otherwise the app tries to mount a nonexistent `frontend/` static directory at import time, before any test code runs. The solution is `FASTAPI_ENV=development uv run pytest` in the backend directory.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['FASTAPI_ENV', 'development']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "db-url-history",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 30.2,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done. The repository was not always structured this way\u2014it was migrated from separate Postgres configuration variables (POSTGRES_SERVER, POSTGRES_PORT, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB) to the single DATABASE_URL in commit 32ab6dd (PR #2184). The evidence is visible in the git history showing the refactoring that removed the separate variables.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['DATABASE_URL', 'separate|2184|migrat']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "db-url-history",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 19.49,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done. The repository previously used separate database configuration variables that were consolidated into the current `DATABASE_URL` setup in commit 32ab6dd (PR #2184).\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['DATABASE_URL', 'separate|2184|migrat']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "db-url-history",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 22.64,
+      "verifier_wall_sec": 0.15,
+      "agent_tail": "Done. I found evidence in the git history that the repository was migrated from separate Postgres environment variables to a single `DATABASE_URL` in commit 32ab6dd (\"\u267b\ufe0f Migrate to `DATABASE_URL` instead of separate variables (#2184)\"), and wrote the one-sentence answer with this evidence to `ANSWER.md`.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['DATABASE_URL', 'separate|2184|migrat']\n"
+    },
+    {
+      "arm": "with-map",
+      "task": "db-url-history",
+      "repeat": 3,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 14.82,
+      "verifier_wall_sec": 0.16,
+      "agent_tail": "Done. The git history shows commit 32ab6dd refactored the Postgres connection from separate variables into a single DATABASE_URL, proving it wasn't always structured this way.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['DATABASE_URL', 'separate|2184|migrat']\n"
+    }
+  ],
+  "summary": {
+    "per_arm": {
+      "no-map": {
+        "n": 20,
+        "pass_rate": 0.95,
+        "median_agent_wall_sec": 60.4,
+        "per_task_pass_rate": {
+          "client-generation": 1.0,
+          "db-url-history": 1.0,
+          "migration-mechanism": 1.0,
+          "permission-location": 1.0,
+          "test-env-gotcha": 0.75
+        }
+      },
+      "with-map": {
+        "n": 20,
+        "pass_rate": 1.0,
+        "median_agent_wall_sec": 39.5,
+        "per_task_pass_rate": {
+          "client-generation": 1.0,
+          "db-url-history": 1.0,
+          "migration-mechanism": 1.0,
+          "permission-location": 1.0,
+          "test-env-gotcha": 1.0
+        }
+      }
+    },
+    "comparison": {
+      "baseline_arm": "no-map",
+      "treatment_arm": "with-map",
+      "pass_rate_delta": 0.05,
+      "ci95": [
+        0.0,
+        0.15
+      ],
+      "crosses_zero": true
+    },
+    "comparisons": [
+      {
+        "baseline_arm": "no-map",
+        "treatment_arm": "with-map",
+        "pass_rate_delta": 0.05,
+        "ci95": [
+          0.0,
+          0.15
+        ],
+        "crosses_zero": true
+      }
+    ],
+    "safety": null
+  }
+}
