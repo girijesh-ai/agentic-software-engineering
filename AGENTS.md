@@ -99,9 +99,9 @@ Kept current so an agent doesn't rediscover them or paper over them:
 - Running thread picked (B0): team-based item sharing, same repo B1 used (which
   predates it by design; its 5 tasks are independent tickets). CLI also resolved.
 - `tools/ablation.py` records wall-clock and pass/fail, not token cost - a tool gap.
-- **Blocking: superset claim fails, 11 real Fall 2026 gaps.** Map rebuilt from the
-  live 10-week syllabus, not the old 5-topic blurb; see `CS146S-COVERAGE.md` § Fall
-  2026. Undecided: write ~6 new units/appendices, or downgrade the Fall 2026 claim.
+- Fall 2026 claim downgraded to `overlaps` (11 real gaps; `cs146s.map.json`
+  `fall_2026_claim`), not written up as new units. Fall 2025 still holds, unweakened.
+  `check_coverage.py` COV008 tracks the 11 as disclosed warnings, see COVERAGE §F26.
 - CS146S evidence is secondary for 9 of 10 Fall-2025 weeks (COV006); W2 is verified.
 - Architecture-audit findings F1-F6 are remediated (see that file's status table). A
   new unit that doesn't advance the running thread is probably a lab step instead.

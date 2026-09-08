@@ -115,11 +115,13 @@ start of Track B and ship it across Tracks B and C — B0 onboards the agent to 
 B1 specs it, B3 builds it, B5 lands it, C1 audits the harness that carried it. You finish
 holding working code plus the harness that produced it, not a folder of analysis.
 
-**It is a superset of Stanford CS146S, and that's a gate rather than a claim.**
-[`cs146s.map.json`](cs146s.map.json) maps all 25 of their topics;
-[`tools/check_coverage.py`](tools/check_coverage.py) fails the build on any topic marked
-omitted or unverified. It currently fails on one — their Week 2, which we haven't read the
-primary syllabus for. Stated rather than rounded away.
+**It is a superset of Stanford CS146S Fall 2025, and that's a gate rather than a
+claim.** [`cs146s.map.json`](cs146s.map.json) maps all 22 of their topics;
+[`tools/check_coverage.py`](tools/check_coverage.py) fails the build on any Fall 2025
+topic marked omitted or unverified. It holds. Fall 2026's announced 10-week syllabus
+is a separate, deliberately weaker claim — overlaps substantially, 11 of 30 topics
+genuinely open — stated as a downgrade rather than rounded up to superset. See
+[`docs/CS146S-COVERAGE.md`](docs/CS146S-COVERAGE.md) for both, and exactly which 11.
 
 **Nothing ships without an ablation.** Authors run one before publishing a unit;
 learners run one before advancing. Bootstrap confidence intervals, and null results get

@@ -9,6 +9,8 @@
   "evidence_quality": "secondary",
   "evidence_note": "Week-by-week content derived from public materials and a third-party course writeup, not from the official syllabus PDF, except week 2, which is now verified directly against the official syllabus at themodernsoftware.dev/fall2025. Upgrade the rest to primary before publishing the superset claim.",
   "claim": "superset",
+  "fall_2026_claim": "overlaps",
+  "fall_2026_claim_note": "Downgraded from 'superset' 2026-09-08: the live 10-week Fall 2026 syllabus surfaced 11 genuinely uncovered topics. Public wording: supersets CS146S Fall 2025; overlaps substantially with, and has open gaps against, Fall 2026's announced topics. Revisit once the gaps close or the course is taught and materials solidify.",
   "topics": [
     {
       "id": "w1.model-internals",

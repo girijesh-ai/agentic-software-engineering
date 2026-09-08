@@ -10,6 +10,8 @@ check that fails.
 Conditions:
 
   COV001  error    a topic has status 'omitted'      - a superset has no holes
+                                                       (warning instead, if the topic's
+                                                       claim scope isn't 'superset')
   COV002  error    a topic has status 'unverified'   - can't claim coverage of
                                                        something you haven't read
   COV003  error    a topic maps to no unit at all
@@ -18,6 +20,8 @@ Conditions:
   COV006  warning  evidence_quality is 'secondary'   - the map rests on a
                                                        third-party writeup
   COV007  warning  the map is more than 12 months old
+  COV008  warning  a topic is 'omitted' under a claim scope already downgraded from
+                                                       'superset' (see fall_2026_claim)
 
 By design this currently FAILS on our own repo: CS146S week 2 is unverified.
 That is the tool working. Do not silence it by guessing at the week's content -
@@ -70,6 +74,21 @@ def check(cmap: dict, written: set[str], planned: set[str],
         targets = topic.get("covered_by", [])
 
         if status == "omitted":
+            # Fall 2026 topics answer to a separate, explicit claim field. If that
+            # claim has already been downgraded from 'superset', an omitted topic
+            # there is honestly disclosed, not a silently broken promise.
+            is_f26 = str(topic.get("week", "")).startswith("F26")
+            f26_claim = cmap.get("fall_2026_claim", cmap.get("claim"))
+            if is_f26 and f26_claim != "superset":
+                findings.append({
+                    "code": "COV008", "severity": "warning", "subject": tid,
+                    "message": f"'{topic['title']}' is omitted, but the Fall 2026 "
+                               f"claim is '{f26_claim}', not 'superset' - disclosed "
+                               "gap, not a broken promise.",
+                    "fix": ["Write a unit and flip to 'planned' when it's real, or "
+                            "leave it omitted as long as the claim stays honest."],
+                })
+                continue
             findings.append({
                 "code": "COV001", "severity": "error", "subject": tid,
                 "message": f"'{topic['title']}' is marked omitted. A superset has no "
@@ -177,6 +196,11 @@ def render(cmap: dict, findings: list[dict]) -> str:
         deeper = by_status.get("deeper", 0)
         out.append(f"  Every CS146S topic maps to a unit; {deeper} go deeper than the "
                    "original.")
+        f26_claim = cmap.get("fall_2026_claim", cmap.get("claim"))
+        if f26_claim != cmap.get("claim"):
+            out.append(f"  Note: Fall 2026 claim is downgraded to '{f26_claim}', not "
+                       "'superset' - its omitted topics are disclosed gaps (COV008),")
+            out.append("  not silently passing errors. See fall_2026_claim_note.")
         out.append("")
 
     for f in errors + warns:

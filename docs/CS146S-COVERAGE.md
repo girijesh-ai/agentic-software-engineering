@@ -2,8 +2,11 @@
 
 <!-- last-verified: 2026-09-08 -->
 
-**The claim: this course is a superset of Stanford's CS146S.** Not "inspired by", not
-"overlaps with" — every topic they teach maps to a unit here, and many go further.
+**The claim: this course is a superset of Stanford's CS146S Fall 2025** — the last
+complete run — **and overlaps substantially with, but has 11 open gaps against,**
+the announced Fall 2026 syllabus. Not "inspired by": every Fall 2025 topic maps to a
+unit here, and many go further. Fall 2026 is weaker on purpose, stated as such rather
+than quietly claimed: see § Fall 2026 for exactly which 11 topics and why.
 
 That is a strong claim, so it is a **gate rather than a sentence**:
 
@@ -11,13 +14,14 @@ That is a strong claim, so it is a **gate rather than a sentence**:
 python3 tools/check_coverage.py --allow-planned
 ```
 
-[`cs146s.map.json`](../cs146s.map.json) holds every topic and its mapping.
-The gate fails on any topic marked `omitted` (a superset has no deliberate holes) or
-`unverified` (you cannot claim coverage of material nobody has read). It currently
-**fails** — Fall 2026's full 10-week syllabus (verified 2026-09-08, see § Fall 2026
-below) surfaced 11 genuinely uncovered topics that the old 5-topic overview blurb
-never exposed. Public wording until this clears: "supersets CS146S Fall 2025; overlaps
-substantially with, and has open gaps against, Fall 2026's announced topics."
+[`cs146s.map.json`](../cs146s.map.json) holds every topic and its mapping, split by a
+`fall_2026_claim` field the gate reads separately from the main `claim`. The gate
+fails on any topic marked `omitted` under a `superset` claim scope, or `unverified`
+(you cannot claim coverage of material nobody has read) — full stop, no downgrade
+available for either of those. An `omitted` topic under a scope already downgraded
+from `superset` (Fall 2026, right now) is a disclosed gap (COV008, a warning), not a
+silently passing error. It currently **holds**: Fall 2025 fully, Fall 2026 honestly
+short by the 11 topics § Fall 2026 names.
 
 This started as an audit that permitted deliberate omissions. The superset constraint
 removed that permission, and two of the three skips became commitments. The constraint
@@ -29,8 +33,8 @@ the live Fall 2026 syllabus — the actual 10-week schedule, not the earlier sit
 overview blurb (see § Fall 2026 for why that distinction turned out to matter).
 
 **Current gate output:** 52 topics — 16 covered, 21 deeper, 4 planned, 11 omitted, 0
-unverified. 11 errors, all from Fall 2026's real gaps; five warnings, traceable to
-units not yet written or the map's secondary evidence base for Fall 2025.
+unverified. 0 errors; 16 warnings — the 11 Fall 2026 gaps (disclosed, COV008) plus
+5 traceable to units not yet written or the map's secondary evidence base.
 
 Verdicts: ✅ covered · ⬆️ covered and deepened · 🆕 gap found, unit added ·
 📌 committed by the superset constraint (was a skip).
@@ -193,10 +197,14 @@ an ablation.
 **This section was rebuilt from the live 10-week syllabus** (verified 2026-09-08),
 replacing an earlier version built from the site's shallow overview blurb (5 flat
 topics, no week structure — the same kind of secondary-source problem the original W2
-blocker was). The superset claim currently **fails**: 11 of 30 Fall 2026 topics are
-genuinely uncovered, not guessed at. `check_coverage.py --allow-planned` still reports
-them as hard errors (not warnings) because `omitted`, unlike `planned`, has no
-"building it out" grace period — a superset has no deliberate holes, full stop.
+blocker was). 11 of 30 Fall 2026 topics are genuinely uncovered, not guessed at, which
+is why **the superset claim is deliberately downgraded for Fall 2026 specifically**
+(`cs146s.map.json`'s `fall_2026_claim: "overlaps"`) rather than for the whole map.
+Fall 2025 still holds as a full, unweakened superset — 0 errors, checked separately.
+`check_coverage.py` reports the 11 Fall 2026 gaps as warnings (COV008, "disclosed
+gap under a downgraded claim"), not the hard errors a superset topic marked `omitted`
+would get; the distinction is the difference between an honest scope statement and a
+silently broken promise.
 
 | Week | Topic | Us |
 |---|---|---|

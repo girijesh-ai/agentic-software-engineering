@@ -38,11 +38,16 @@ which she names as the open problem.
 ## 2. What already exists
 
 **Stanford CS146S — *The Modern Software Developer*.** Ten weeks, Mihail Eric, public
-materials and assignments, strong guest lineup. The Fall 2026 edition advertises MCP,
-agent skills, spec-driven development, loop engineering and the software factory.
-Excellent survey. It is a survey: you finish it understanding the landscape and holding
-no workflow you can run on Monday, and the real learning is concentrated in a final
-project weighted at 80%.
+materials and assignments, strong guest lineup. Fall 2026's syllabus (verified against
+the live 10-week schedule, not just the site's overview) adds agent internals and
+system-prompt design, RePPIT, agent skills and web skills, CLAUDE.md/AGENTS.md and
+hooks, subagent patterns, agent-ready-repo scoring, background/cloud-delegated agents,
+MCP portals and LLM gateways — a real expansion, not just MCP/skills/spec-driven/loop
+engineering/software factory as the site's summary blurb implies. Excellent survey. It
+is a survey: you finish it understanding the landscape and holding no workflow you can
+run on Monday. Grading also shifted from Fall 2025's 80%-project weighting toward 50%
+project + 30% open-source contributions — moving toward, not away from, the
+ship-real-software emphasis this course already gates on (SC-11).
 
 **walkinglabs/learn-harness-engineering.** ~9.6k stars, 1k forks, MIT, fifteen
 languages, 12 lectures and 6 projects, a VitePress site, a `harness-creator` skill and
