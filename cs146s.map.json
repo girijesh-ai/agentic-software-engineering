@@ -3,9 +3,9 @@
   "source": "Stanford CS146S \u2014 The Modern Software Developer",
   "source_terms": [
     "Fall 2025 (complete)",
-    "Fall 2026 (announced topics only)"
+    "Fall 2026 (complete syllabus, topics announced; course not yet run)"
   ],
-  "verified_on": "2026-09-05",
+  "verified_on": "2026-09-08",
   "evidence_quality": "secondary",
   "evidence_note": "Week-by-week content derived from public materials and a third-party course writeup, not from the official syllabus PDF, except week 2, which is now verified directly against the official syllabus at themodernsoftware.dev/fall2025. Upgrade the rest to primary before publishing the superset claim.",
   "claim": "superset",
@@ -228,55 +228,275 @@
       "status": "covered"
     },
     {
-      "id": "f26.mcp",
-      "week": null,
-      "title": "MCP (Fall 2026 announced)",
+      "id": "f26w1.llm-agent-loop",
+      "week": "F26-1",
+      "title": "What an LLM actually is, and the agent loop under the hood",
+      "covered_by": [
+        "a1",
+        "a2"
+      ],
+      "status": "deeper",
+      "note": "A1 covers pretraining/SFT/RL; A2 unrolls the agent loop stage by stage with real Terminal-Bench evidence, beyond a conceptual walkthrough."
+    },
+    {
+      "id": "f26w1.tool-set-task-flow",
+      "week": "F26-1",
+      "title": "The core tool set (read, write, edit, bash) and how tasks flow through it",
+      "covered_by": [
+        "a2"
+      ],
+      "status": "covered",
+      "note": "A2's unrolled loop (gather context -> select tool -> execute -> observe -> repeat -> terminate) is this topic."
+    },
+    {
+      "id": "f26w1.system-prompt-design",
+      "week": "F26-1",
+      "title": "How production coding agents structure their system prompts and tool definitions",
+      "covered_by": [],
+      "status": "omitted",
+      "note": "A5 covers tool *definitions* for MCP; system-prompt architecture of a production agent (the '200 lines' build activity) is not taught anywhere. Genuine gap."
+    },
+    {
+      "id": "f26w2.advanced-prompting",
+      "week": "F26-2",
+      "title": "Advanced prompting techniques and when each applies",
+      "covered_by": [
+        "a1"
+      ],
+      "status": "covered"
+    },
+    {
+      "id": "f26w2.reppit",
+      "week": "F26-2",
+      "title": "RePPIT (Research, Propose, Plan, Implement, Test) and spec-driven development",
+      "covered_by": [
+        "b2"
+      ],
+      "status": "planned",
+      "note": "Occupies the same slot as this course's spec-from-idea -> plan-from-spec -> implement -> review-code -> finish-branch spine. Needs the same explicit named comparison ECOSYSTEM-MAP.md already gives obra/superpowers, written when B2 is. Not a coverage claim without that comparison existing."
+    },
+    {
+      "id": "f26w2.mcp-fundamentals",
+      "week": "F26-2",
+      "title": "MCP fundamentals: servers, clients, tools, and transport",
       "covered_by": [
         "a5"
       ],
       "status": "covered"
     },
     {
-      "id": "f26.agent-skills",
-      "week": null,
-      "title": "Agent skills (Fall 2026 announced)",
+      "id": "f26w2.tool-ergonomics",
+      "week": "F26-2",
+      "title": "Designing tools for agent ergonomics",
+      "covered_by": [
+        "a5"
+      ],
+      "status": "deeper",
+      "note": "A5's consolidation and semantic-output principles, plus a tool-count ablation, go beyond ergonomics-as-advice."
+    },
+    {
+      "id": "f26w3.skill-authoring",
+      "week": "F26-3",
+      "title": "What skills are and how SKILL.md + scripts encode a workflow",
       "covered_by": [
         "c6"
       ],
-      "status": "deeper",
-      "note": "We teach authoring, description design, and evals against a no-skill baseline."
+      "status": "deeper"
     },
     {
-      "id": "f26.spec-driven",
-      "week": null,
-      "title": "Spec-driven development (Fall 2026 announced)",
+      "id": "f26w3.web-skills",
+      "week": "F26-3",
+      "title": "Web skills and extending agent capability beyond the repo",
+      "covered_by": [],
+      "status": "omitted",
+      "note": "C6 teaches authoring skills generally; browser/web-fetch-capability skills specifically are not addressed. Genuine gap."
+    },
+    {
+      "id": "f26w3.cli-fluency",
+      "week": "F26-3",
+      "title": "Working effectively from the CLI",
+      "covered_by": [],
+      "status": "omitted",
+      "note": "Claude Code is the reference CLI throughout the course, but CLI fluency itself is never taught as an explicit topic or lab. Implicit exposure is not the same as coverage."
+    },
+    {
+      "id": "f26w4.claude-agents-md",
+      "week": "F26-4",
+      "title": "CLAUDE.md and AGENTS.md: what to put where",
+      "covered_by": [
+        "c2"
+      ],
+      "status": "deeper"
+    },
+    {
+      "id": "f26w4.hooks",
+      "week": "F26-4",
+      "title": "Hooks for lint gates, test runs, and guardrails",
+      "covered_by": [],
+      "status": "omitted",
+      "note": "Only /loop and /batch are covered as built-ins. Hooks as a guardrail mechanism are not named anywhere. Genuine gap."
+    },
+    {
+      "id": "f26w4.subagent-patterns",
+      "week": "F26-4",
+      "title": "Subagent patterns (planner / implementer / reviewer)",
+      "covered_by": [],
+      "status": "omitted",
+      "note": "Only a passing mention that /batch spawns subagents. Not covered as a designed pattern. Genuine gap."
+    },
+    {
+      "id": "f26w5.agent-ready-scoring",
+      "week": "F26-5",
+      "title": "What makes a repo agent-ready: structure, docs, tests, checks; scoring and auditing readiness",
+      "covered_by": [],
+      "status": "omitted",
+      "note": "Distinct from B0: B0 is an agent comprehending an unfamiliar repo (descriptive); this is making a repo scoreably agent-ready (prescriptive, a gate). Related but not the same claim. Genuine gap."
+    },
+    {
+      "id": "f26w5.common-gaps",
+      "week": "F26-5",
+      "title": "Common gaps that block agents in real repos",
+      "covered_by": [
+        "b0"
+      ],
+      "status": "deeper",
+      "note": "B0's own failure table (FASTAPI_ENV import-time gotcha, migration state outliving git reset, an implementation-coupled test) is real, first-hand examples of exactly this, though from the comprehension angle rather than a scoring rubric."
+    },
+    {
+      "id": "f26w6.ai-review-limits",
+      "week": "F26-6",
+      "title": "What AI review catches well, and what it misses",
       "covered_by": [
         "b1",
-        "b2",
-        "b3",
-        "b4",
-        "b5"
+        "b4"
       ],
       "status": "deeper",
-      "note": "Five units and an installable 16-skill plugin."
+      "note": "B1's whole thesis (the sensor gap: neither computational nor inferential sensors reliably catch misdiagnosis) plus B4's operationalized two-axis review."
     },
     {
-      "id": "f26.loop-engineering",
-      "week": null,
-      "title": "Loop engineering (Fall 2026 announced)",
+      "id": "f26w6.review-architectures",
+      "week": "F26-6",
+      "title": "Review architectures and custom rules",
+      "covered_by": [
+        "b4",
+        "c3"
+      ],
+      "status": "deeper"
+    },
+    {
+      "id": "f26w6.review-in-workflow",
+      "week": "F26-6",
+      "title": "Fitting AI review into a team's PR workflow",
+      "covered_by": [
+        "b4"
+      ],
+      "status": "covered"
+    },
+    {
+      "id": "f26w7.sast-sca",
+      "week": "F26-7",
+      "title": "SAST / SCA, dependency and secret-leak vulnerabilities",
+      "covered_by": [
+        "d1"
+      ],
+      "status": "covered"
+    },
+    {
+      "id": "f26w7.prompt-injection",
+      "week": "F26-7",
+      "title": "Prompt injection and agent-specific attack surfaces",
+      "covered_by": [
+        "d1"
+      ],
+      "status": "deeper",
+      "note": "Track E extends this to datasets and model cards, which CS146S doesn't touch."
+    },
+    {
+      "id": "f26w7.triage-remediation",
+      "week": "F26-7",
+      "title": "Agent-assisted triage and remediation",
+      "covered_by": [
+        "d1"
+      ],
+      "status": "covered"
+    },
+    {
+      "id": "f26w8.async-cloud-agents",
+      "week": "F26-8",
+      "title": "Async, cloud-delegated agents",
+      "covered_by": [],
+      "status": "omitted",
+      "note": "C5 covers local, worktree-based parallel fleets only. Remote-triggered, cloud-delegated async agents are not addressed. Genuine gap."
+    },
+    {
+      "id": "f26w8.fleets",
+      "week": "F26-8",
+      "title": "Managing fleets of parallel agents",
+      "covered_by": [
+        "c5"
+      ],
+      "status": "deeper",
+      "note": "Covered for local worktree fleets: throughput philosophy, merge discipline, entropy/gardening. The cloud/remote half is the separate f26w8.async-cloud-agents gap."
+    },
+    {
+      "id": "f26w8.issue-to-pr-triggers",
+      "week": "F26-8",
+      "title": "Issue-to-PR pipelines and triggers (Slack, Linear, GitHub)",
+      "covered_by": [],
+      "status": "omitted",
+      "note": "Not addressed anywhere. Genuine gap."
+    },
+    {
+      "id": "f26w9.mcp-portals",
+      "week": "F26-9",
+      "title": "MCP portals and centralized, permissioned tool access",
+      "covered_by": [],
+      "status": "omitted",
+      "note": "Not addressed anywhere. Genuine gap."
+    },
+    {
+      "id": "f26w9.llm-gateways",
+      "week": "F26-9",
+      "title": "LLM gateways, model routing, and cost optimization",
+      "covered_by": [],
+      "status": "omitted",
+      "note": "Not addressed anywhere. Genuine gap."
+    },
+    {
+      "id": "f26w9.org-adoption",
+      "week": "F26-9",
+      "title": "Org-wide adoption patterns",
+      "covered_by": [
+        "d4"
+      ],
+      "status": "deeper",
+      "note": "D4 covers rollout strategy and stop-loss decisions; the portals/gateways infrastructure half is the separate gaps above."
+    },
+    {
+      "id": "f26w10.software-factory",
+      "week": "F26-10",
+      "title": "Self-running, self-improving software systems",
       "covered_by": [
         "c5"
       ],
       "status": "covered"
     },
     {
-      "id": "f26.software-factory",
-      "week": null,
-      "title": "The software factory (Fall 2026 announced)",
+      "id": "f26w10.post-deployment-ops",
+      "week": "F26-10",
+      "title": "Running and securing agents post-deployment",
       "covered_by": [
-        "c5"
+        "d2"
       ],
-      "status": "covered"
+      "status": "deeper"
+    },
+    {
+      "id": "f26w10.future-speculation",
+      "week": "F26-10",
+      "title": "Where AI software engineering goes next",
+      "covered_by": [],
+      "status": "omitted",
+      "note": "Deliberately out of scope by course identity: this is a practicum (unit=lab, assessment=gate), not a survey, and speculative futurism has no gate. Named here rather than silently dropped; the honest resolution is a dated, disposable appendix (the A6/appendix-landscape precedent), not a lab."
     }
   ]
 }

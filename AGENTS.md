@@ -94,15 +94,15 @@ Failing any of these means it doesn't merge, however good the prose is.
 
 Kept current so an agent doesn't rediscover them or paper over them:
 
-- `tools/audit.sh` exits 0. B0 and B1 both have real `results/authors-run.json`
-  (40 and 60 runs). B1's hypothesis was falsified (a spec: 53% -> 100%, not
-  "barely"); *wrong-problem failures* still needs two human graders, see B1 README §6.
-- Running thread picked (B0): team-based item sharing in
-  `tiangolo/full-stack-fastapi-template`. B1 predates it by design (order of value);
-  its 5 tasks are independent tickets. Reference CLI resolved too: Claude Code.
+- `tools/audit.sh` exits 0. B0 and B1 have real results (40, 60 runs). B1's
+  hypothesis was falsified (53% -> 100%); wrong-problem failures still need grading.
+- Running thread picked (B0): team-based item sharing, same repo B1 used (which
+  predates it by design; its 5 tasks are independent tickets). CLI also resolved.
 - `tools/ablation.py` records wall-clock and pass/fail, not token cost - a tool gap.
-- CS146S evidence is secondary for 9 of 10 weeks (`check_coverage.py` COV006). W2 was
-  verified against the live syllabus this session; the rest still need the same pass.
+- **Blocking: superset claim fails, 11 real Fall 2026 gaps.** Map rebuilt from the
+  live 10-week syllabus, not the old 5-topic blurb; see `CS146S-COVERAGE.md` § Fall
+  2026. Undecided: write ~6 new units/appendices, or downgrade the Fall 2026 claim.
+- CS146S evidence is secondary for 9 of 10 Fall-2025 weeks (COV006); W2 is verified.
 - Architecture-audit findings F1-F6 are remediated (see that file's status table). A
   new unit that doesn't advance the running thread is probably a lab step instead.
 - `skills.lock.json` is pinned to plugin 1.0.1 and unverified against anything newer.

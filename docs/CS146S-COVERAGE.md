@@ -1,6 +1,6 @@
 # CS146S superset conformance
 
-<!-- last-verified: 2026-09-05 -->
+<!-- last-verified: 2026-09-08 -->
 
 **The claim: this course is a superset of Stanford's CS146S.** Not "inspired by", not
 "overlaps with" — every topic they teach maps to a unit here, and many go further.
@@ -14,8 +14,10 @@ python3 tools/check_coverage.py --allow-planned
 [`cs146s.map.json`](../cs146s.map.json) holds every topic and its mapping.
 The gate fails on any topic marked `omitted` (a superset has no deliberate holes) or
 `unverified` (you cannot claim coverage of material nobody has read). It currently
-**holds** — three topics are still `planned` (units not yet written), which is why
-`--allow-planned` is part of the command above.
+**fails** — Fall 2026's full 10-week syllabus (verified 2026-09-08, see § Fall 2026
+below) surfaced 11 genuinely uncovered topics that the old 5-topic overview blurb
+never exposed. Public wording until this clears: "supersets CS146S Fall 2025; overlaps
+substantially with, and has open gaps against, Fall 2026's announced topics."
 
 This started as an audit that permitted deliberate omissions. The superset constraint
 removed that permission, and two of the three skips became commitments. The constraint
@@ -23,12 +25,12 @@ made the course better — B6 in particular turned out to be the sharpest test o
 course's own thesis, which is not what I expected when I cut it.
 
 **Audited against:** CS146S Fall 2025 public materials (the last complete run), plus
-the Fall 2026 course description, which advertises MCP, agent skills, spec-driven
-development, loop engineering and the software factory.
+the live Fall 2026 syllabus — the actual 10-week schedule, not the earlier site
+overview blurb (see § Fall 2026 for why that distinction turned out to matter).
 
-**Current gate output:** 27 topics — 12 covered, 12 deeper, 3 planned, 0 unverified.
-Zero errors; four warnings, all traceable to units not yet written or to the map's
-own secondary evidence base.
+**Current gate output:** 52 topics — 16 covered, 21 deeper, 4 planned, 11 omitted, 0
+unverified. 11 errors, all from Fall 2026's real gaps; five warnings, traceable to
+units not yet written or the map's secondary evidence base for Fall 2025.
 
 Verdicts: ✅ covered · ⬆️ covered and deepened · 🆕 gap found, unit added ·
 📌 committed by the superset constraint (was a skip).
@@ -186,24 +188,51 @@ an ablation.
 
 ---
 
-## Fall 2026 announced topics
+## Fall 2026, week by week
 
-| Topic | Us |
-|---|---|
-| MCP | 🆕 A5 (added by this audit) |
-| Agent skills | 🆕 C6 (added by this audit) |
-| Spec-driven development | ⬆️ Track B, five units, with an installable plugin |
-| Loop engineering | ✅ C5 |
-| The software factory | ✅ C5 |
+**This section was rebuilt from the live 10-week syllabus** (verified 2026-09-08),
+replacing an earlier version built from the site's shallow overview blurb (5 flat
+topics, no week structure — the same kind of secondary-source problem the original W2
+blocker was). The superset claim currently **fails**: 11 of 30 Fall 2026 topics are
+genuinely uncovered, not guessed at. `check_coverage.py --allow-planned` still reports
+them as hard errors (not warnings) because `omitted`, unlike `planned`, has no
+"building it out" grace period — a superset has no deliberate holes, full stop.
 
-**Agent skills** was the second real gap. CS146S teaches skills as a capability of the
-platform. We ship sixteen of them and never taught anyone to write one — which is
-absurd given that the course's own plugin will keep growing.
+| Week | Topic | Us |
+|---|---|---|
+| 1 | LLM + agent loop internals | ⬆️ A1, A2 |
+| 1 | Core tool set and task flow | ✅ A2 |
+| 1 | Production system-prompt / tool-definition design | ⚠️ **gap** |
+| 2 | Advanced prompting | ✅ A1 |
+| 2 | RePPIT + spec-driven development | 📌 planned — needs a named comparison in B2, the way B2 already compares itself to `obra/superpowers` |
+| 2 | MCP fundamentals | ✅ A5 |
+| 2 | Tool ergonomics | ⬆️ A5 |
+| 3 | Skill authoring (SKILL.md) | ⬆️ C6 |
+| 3 | Web skills | ⚠️ **gap** |
+| 3 | CLI fluency | ⚠️ **gap** (implicit exposure via Claude Code throughout ≠ taught) |
+| 4 | CLAUDE.md / AGENTS.md | ⬆️ C2 |
+| 4 | Hooks as guardrails | ⚠️ **gap** |
+| 4 | Subagent patterns (planner/implementer/reviewer) | ⚠️ **gap** |
+| 5 | Agent-ready repo scoring/auditing | ⚠️ **gap** — distinct from B0 (B0 is an agent comprehending a repo; this is scoring the repo itself) |
+| 5 | Common gaps blocking agents | ⬆️ B0 |
+| 6 | AI review limits, architectures, workflow fit | ⬆️ B1, B4, C3 |
+| 7 | SAST/SCA, prompt injection, triage | ⬆️ D1 |
+| 8 | Local parallel fleets | ⬆️ C5 |
+| 8 | Async cloud-delegated agents | ⚠️ **gap** |
+| 8 | Issue-to-PR triggers (Slack/Linear/GitHub) | ⚠️ **gap** |
+| 9 | Org adoption patterns | ⬆️ D4 |
+| 9 | MCP portals | ⚠️ **gap** |
+| 9 | LLM gateways / model routing | ⚠️ **gap** |
+| 10 | Software factory, post-deployment ops | ✅ C5, ⬆️ D2 |
+| 10 | "Where the field goes next" | ⚠️ **omitted by design** — a practicum gates labs, not speculation; the honest resolution is a dated appendix (the A6 precedent), not a claim of coverage |
 
-**Action taken: added C6 · Authoring skills that survive.** Skills as progressive-
-disclosure guides, description design for reliable triggering, evals for skills, and
-versioning and deprecation. See [`PLUGIN-CONTRACT.md`](PLUGIN-CONTRACT.md) for why this
-unit is load-bearing rather than nice-to-have.
+Legend adds ⚠️ **gap** (genuinely uncovered, tracked in `AGENTS.md` § Known gaps) to
+the existing ✅ ⬆️ 🆕 📌 set.
+
+**Also new in Fall 2026, not a topic row:** grading shifts from 80/15/5
+(project/assignments/participation) to **50/15/30/5**, adding a 30% "Open Source
+Contributions" category. We already gate the capstone on a real merged/opened PR
+(SC-11) — this is a place Fall 2026 moved toward our existing design, not away from it.
 
 ---
 
