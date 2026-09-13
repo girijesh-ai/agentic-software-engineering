@@ -94,12 +94,12 @@ Failing any of these means it doesn't merge, however good the prose is.
 
 Kept current so an agent doesn't rediscover them or paper over them:
 
-- `tools/audit.sh` exits 0. B0-B3 have real results (40/60/30/30 runs); each unit's
-  pre-registered hypothesis ran inconclusive-to-opposite - read the §6s.
-- Running thread: picked (B0), specced+planned (B2), built (B3). B4 reviews it next.
-  Scratch clone moved to `~/Documents/ai-swe-course-scratch/fsft` - `/private/tmp`
-  lost git objects twice across multi-day gaps. Commit work there immediately.
-- `tools/ablation.py` records wall-clock and pass/fail, not token cost - a tool gap.
+- `tools/audit.sh` exits 0. B0-B3, C1 have real results; every hypothesis ran
+  inconclusive-to-opposite - read the §6s.
+- **Top gap (C1, carried since B1): wrong-problem-failures grading needs a human;
+  none of B1/B2/B3 ran it.** Fix the grading next, not another unit.
+- Running thread: picked/specced/planned/built/audited (B0-C1); B4 next.
+  Scratch clone: `~/Documents/ai-swe-course-scratch/fsft`, not `/private/tmp`.
 - Fall 2026 claim downgraded to `overlaps` (`fall_2026_claim`, 11 gaps, COV008),
   not written up as units; Fall 2025 still holds unweakened, evidence secondary for
   9 of 10 weeks (COV006, W2 verified) - see `CS146S-COVERAGE.md`.
