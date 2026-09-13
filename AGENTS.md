@@ -94,15 +94,15 @@ Failing any of these means it doesn't merge, however good the prose is.
 
 Kept current so an agent doesn't rediscover them or paper over them:
 
-- `tools/audit.sh` exits 0. B0, B1, B2 have real results (40, 60, 30 runs). B1's and
-  B2's own hypotheses both ran inconclusive-to-opposite - read each README §6.
-- Running thread picked (B0), specced and planned for real (B2): team-based item
-  sharing, same repo B1 used (which predates the pick by design). B3 builds it next.
+- `tools/audit.sh` exits 0. B0-B3 have real results (40/60/30/30 runs); each unit's
+  pre-registered hypothesis ran inconclusive-to-opposite - read the §6s.
+- Running thread: picked (B0), specced+planned (B2), built (B3). B4 reviews it next.
+  Scratch clone moved to `~/Documents/ai-swe-course-scratch/fsft` - `/private/tmp`
+  lost git objects twice across multi-day gaps. Commit work there immediately.
 - `tools/ablation.py` records wall-clock and pass/fail, not token cost - a tool gap.
-- Fall 2026 claim downgraded to `overlaps` (11 real gaps; `cs146s.map.json`
-  `fall_2026_claim`), not written up as new units. Fall 2025 still holds, unweakened.
-  `check_coverage.py` COV008 tracks the 11 as disclosed warnings, see COVERAGE §F26.
-- CS146S evidence is secondary for 9 of 10 Fall-2025 weeks (COV006); W2 is verified.
+- Fall 2026 claim downgraded to `overlaps` (`fall_2026_claim`, 11 gaps, COV008),
+  not written up as units; Fall 2025 still holds unweakened, evidence secondary for
+  9 of 10 weeks (COV006, W2 verified) - see `CS146S-COVERAGE.md`.
 - Architecture-audit findings F1-F6 are remediated (see that file's status table). A
   new unit that doesn't advance the running thread is probably a lab step instead.
 - `skills.lock.json` is pinned to plugin 1.0.1 and unverified against anything newer.
