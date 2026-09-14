@@ -94,15 +94,15 @@ Failing any of these means it doesn't merge, however good the prose is.
 
 Kept current so an agent doesn't rediscover them or paper over them:
 
-- `tools/audit.sh` exits 0. B0-B3, C1 have real results; every hypothesis ran
-  inconclusive-to-opposite - read the §6s.
+- `tools/audit.sh` exits 0. B0-B3, C1, C3 have real results; every hypothesis
+  ran inconclusive-to-opposite - read the §6s. C3: 28 failures, one shared
+  cause regardless of message style - a sensor's ceiling is what it measures.
 - Wrong-problem grading ran (B1, 2 AI graders, 100% agreement, zero found) -
   disclosed substitute for human graders, not a closed gap; see B1's `grading/`.
-- Running thread: picked/specced/planned/built/audited (B0-C1); B4 next.
+- Running thread: picked/specced/planned/built/audited/hardened (B0-C3); B4 next.
   Scratch clone: `~/Documents/ai-swe-course-scratch/fsft`, not `/private/tmp`.
-- Fall 2026 claim downgraded to `overlaps` (`fall_2026_claim`, 11 gaps, COV008),
-  not written up as units; Fall 2025 still holds unweakened, evidence secondary for
-  9 of 10 weeks (COV006, W2 verified) - see `CS146S-COVERAGE.md`.
+- Fall 2026 claim downgraded to `overlaps` (11 gaps, COV008), not written up as
+  units; Fall 2025 holds unweakened, secondary evidence for 9/10 weeks (COV006).
 - Architecture-audit findings F1-F6 are remediated (see that file's status table). A
   new unit that doesn't advance the running thread is probably a lab step instead.
 - `skills.lock.json` is pinned to plugin 1.0.1 and unverified against anything newer.
