@@ -96,8 +96,8 @@ Kept current so an agent doesn't rediscover them or paper over them:
 
 - `tools/audit.sh` exits 0. B0-B3, C1 have real results; every hypothesis ran
   inconclusive-to-opposite - read the §6s.
-- **Top gap (C1, carried since B1): wrong-problem-failures grading needs a human;
-  none of B1/B2/B3 ran it.** Fix the grading next, not another unit.
+- Wrong-problem grading ran (B1, 2 AI graders, 100% agreement, zero found) -
+  disclosed substitute for human graders, not a closed gap; see B1's `grading/`.
 - Running thread: picked/specced/planned/built/audited (B0-C1); B4 next.
   Scratch clone: `~/Documents/ai-swe-course-scratch/fsft`, not `/private/tmp`.
 - Fall 2026 claim downgraded to `overlaps` (`fall_2026_claim`, 11 gaps, COV008),

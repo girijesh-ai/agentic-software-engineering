@@ -227,10 +227,10 @@ that clone). Verified 2026-09-07.
 
 | Arm | Pass rate | Median agent wall (s) | Wrong-problem failures | Cost/task |
 |---|---|---|---|---|
-| Bare prompt | 73% (11/15) | 108.4 | not yet graded | not captured |
-| Prompt + `CLAUDE.md` only | 53% (8/15) | 66.1 | not yet graded | not captured |
-| Spec, unlinted | 100% (15/15) | 118.6 | not yet graded | not captured |
-| Spec, linted + grilled | 100% (15/15) | 100.0 | not yet graded | not captured |
+| Bare prompt | 73% (11/15) | 108.4 | 0/4 failures (2 code-defect, 2 no-action) | not captured |
+| Prompt + `CLAUDE.md` only | 53% (8/15) | 66.1 | 0/7 failures (3 code-defect, 4 no-action) | not captured |
+| Spec, unlinted | 100% (15/15) | 118.6 | n/a — no failures to grade | not captured |
+| Spec, linted + grilled | 100% (15/15) | 100.0 | n/a — no failures to grade | not captured |
 
 `spec-unlinted` and `spec-linted-grilled` vs `no-harness`: **+26.7pp** pass rate each
 (95% CI +0.067 to +0.467 — effect detected, interval excludes zero). `prompt-only` vs
@@ -264,22 +264,27 @@ specific a fact. This echoes the ecosystem note in `docs/ECOSYSTEM-MAP.md`: a
 prompt-only control can land *below* baseline, which a two-arm design (harness on/off)
 would never surface.
 
-**Wrong-problem failures - not yet graded.** This needs two independent human graders
-reading the diffs against intent, per the protocol below; that hasn't happened. It is
-the load-bearing column for this unit's thesis and its absence is a real gap, tracked
-in `AGENTS.md` § Known gaps, not papered over with a self-graded number. One informal
-spot-check while preparing this write-up: reading the `login-rate-limit` transcripts
-directly, most arms - including bare prompt - explicitly reasoned about per-account
-vs. per-IP and chose correctly, which is itself informative (the canonical failure
-mode in §2 is not this model's default failure mode on this task) but is not a
-substitute for the real protocol.
+**Wrong-problem failures - graded, and the result cuts against this unit's own
+opening thesis.** All 11 real failures (the only ones that occurred — `spec-unlinted`
+and `spec-linted-grilled` had none) were graded by two independent, context-isolated
+graders against a four-category rubric (WRONG_PROBLEM, CODE_DEFECT, NO_ACTION,
+OTHER). The two graders agreed on all 11 cases (100% agreement, 0% disagreement), and
+**neither found a single wrong-problem failure**: every failure was either an
+execution-level bug in an otherwise correctly-understood approach (5 cases — the
+agent's own summary states the right design, e.g. per-account rate limiting or
+case-insensitive search, and the implementation broke somewhere) or the agent
+declining to act at all (6 cases — asking a clarifying question in non-interactive
+mode, where nobody answers). Full protocol, per-case reasoning, and — important —
+three real limitations on what this result can and can't support, in
+[`results/lab-materials/grading/grading-results.md`](results/lab-materials/grading/grading-results.md).
+The graders were AI, not human, which the same file explains is not a formality: this
+course's own thesis says inferential sensors are exactly what might miss a
+wrong-problem failure, and using two of them to check for wrong-problem failures does
+not settle whether there were none.
 
 **Cost/task - not captured.** `tools/ablation.py` records wall-clock time and
 pass/fail, not token cost. Adding it is a small, real gap (a follow-up, not done
 here) rather than an invented dollar figure.
-
-Grading protocol for the column above, once run: two independent graders, published
-disagreement rate, protocol in `results/README.md` (not yet written).
 
 ## 7. What makes this obsolete
 

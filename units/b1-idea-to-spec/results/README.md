@@ -17,18 +17,28 @@ taken on faith:
 - `CLAUDE.prompt-only.md`, `CLAUDE.spec-pointer.md` - the two `CLAUDE.md` variants
   used by the `prompt-only` and both spec arms respectively.
 
-## Grading protocol - not yet run
+## Grading protocol - run 2026-09-14, with a disclosed substitution
 
-§6's *wrong-problem failures* column needs two independent human graders reading
-each run's diff against the ticket's actual intent, with the disagreement rate
-published here. That hasn't happened; it's tracked in `AGENTS.md` § Known gaps.
-Do not fill in that column with a self-graded or single-grader number when this
-does get done - the whole point of a second grader is that intent-matching is not a
-question either automation or one reader's judgement should be trusted to settle
-alone, which is this unit's own thesis applied to itself.
+§6's *wrong-problem failures* column is now filled from a real grading pass over all
+11 of B1's failed runs (there were no failures in the two spec arms to grade). Full
+protocol, rubric, per-case data, and results:
+[`lab-materials/grading/`](lab-materials/grading/) —
+[`rubric.md`](lab-materials/grading/rubric.md),
+[`failed-runs-packet.json`](lab-materials/grading/failed-runs-packet.json),
+[`grading-results.md`](lab-materials/grading/grading-results.md).
 
-The runs are all in `authors-run.json` (`agent_tail` per run has the model's own
-account of what it built); the diffs themselves are not preserved, since the target
-clone is a scratch checkout of an external repo. A grading pass would need to
-re-run `agent_command` against each `(arm, task, repeat)` and keep the diff, or grade
-directly from `agent_tail`'s description with that caveat noted.
+**The graders were two independent, context-isolated AI agents, not the two human
+graders this protocol originally specified.** That substitution is disclosed, not
+hidden, and `grading-results.md` explains why it matters rather than treating it as
+a formality: this course's own thesis is that inferential sensors (which is what an
+AI grader is) are exactly the kind of check that can miss a wrong-problem failure.
+Two AI graders agreeing unanimously that none occurred is real data, not proof.
+If a genuine human grading pass ever runs against this same packet, compare its
+verdicts against `grading-results.md` and publish the three-way disagreement rate
+rather than quietly overwriting the AI graders' numbers.
+
+Diffs were never captured (`tools/ablation.py` never recorded them, and the target
+clone is a scratch checkout with no durable history per run) - both graders worked
+from `agent_tail`'s self-reported closing summary plus the verifier's failure output,
+not the actual code change. `grading-results.md` § "Why this doesn't settle the
+question either" names this and two other real limitations explicitly.
