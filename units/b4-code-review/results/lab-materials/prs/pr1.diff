@@ -1,0 +1,17 @@
+diff --git a/backend/app/api/routes/items.py b/backend/app/api/routes/items.py
+index ee1b19d..fd9335c 100644
+--- a/backend/app/api/routes/items.py
++++ b/backend/app/api/routes/items.py
+@@ -100,9 +100,10 @@ def create_item(
+ 
+ 
+ @router.put("/{id}", response_model=ItemPublic)
+-def update_item(*, session: SessionDep, item: EditableItem, item_in: ItemUpdate) -> Any:
++def update_item(*, session: SessionDep, item: ViewableItem, item_in: ItemUpdate) -> Any:
+     """
+-    Update an item.
++    Update an item. Now also lets a viewer toggle read status via the same
++    endpoint, since read status is metadata rather than content.
+     """
+     update_dict = item_in.model_dump(exclude_unset=True)
+     item.sqlmodel_update(update_dict)

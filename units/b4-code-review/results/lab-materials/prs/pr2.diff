@@ -1,0 +1,29 @@
+diff --git a/backend/app/api/routes/teams.py b/backend/app/api/routes/teams.py
+index ddc270e..8173366 100644
+--- a/backend/app/api/routes/teams.py
++++ b/backend/app/api/routes/teams.py
+@@ -71,6 +71,24 @@ def add_member(
+     return membership
+ 
+ 
++@router.get("/{team_id}/members", response_model=list[TeamMembershipPublic])
++def list_members(
++    *, session: SessionDep, current_user: CurrentUser, team_id: uuid.UUID
++) -> Any:
++    """
++    List a team's members. Any current member (any role) can see the roster;
++    non-members get 403, matching how item access is scoped to membership.
++    """
++    if not session.get(Team, team_id):
++        raise HTTPException(status_code=404, detail="Team not found")
++    if not current_user.is_superuser:
++        caller_membership = session.get(TeamMembership, (team_id, current_user.id))
++        if not caller_membership:
++            raise HTTPException(status_code=403, detail="Not enough permissions")
++    statement = select(TeamMembership).where(TeamMembership.team_id == team_id)
++    return session.exec(statement).all()
++
++
+ @router.delete("/{team_id}/members/{user_id}", response_model=Message)
+ def remove_member(
+     *, session: SessionDep, current_user: CurrentUser, team_id: uuid.UUID, user_id: uuid.UUID

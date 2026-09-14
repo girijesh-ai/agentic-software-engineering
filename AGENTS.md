@@ -94,13 +94,13 @@ Failing any of these means it doesn't merge, however good the prose is.
 
 Kept current so an agent doesn't rediscover them or paper over them:
 
-- `tools/audit.sh` exits 0. B0-B3, C1, C3 have real results; every hypothesis
+- `tools/audit.sh` exits 0. B0-B4, C1, C3 have real results; every hypothesis
   ran inconclusive-to-opposite - read the §6s. C3: 28 failures, one shared
-  cause regardless of message style - a sensor's ceiling is what it measures.
+  cause. B4: spec-withheld matched spec-provided on 4/5 PRs via sibling-code
+  precedent, not the spec - see B4 README §6's 3 limitations first.
 - Wrong-problem grading ran (B1, 2 AI graders, 100% agreement, zero found) -
   disclosed substitute for human graders, not a closed gap; see B1's `grading/`.
-- Running thread: picked/specced/planned/built/audited/hardened (B0-C3); B4 next.
-  Scratch clone: `~/Documents/ai-swe-course-scratch/fsft`, not `/private/tmp`.
+- Running thread (B0-B4 done, B5 next): `~/Documents/ai-swe-course-scratch/fsft`.
 - Fall 2026 claim downgraded to `overlaps` (11 gaps, COV008), not written up as
   units; Fall 2025 holds unweakened, secondary evidence for 9/10 weeks (COV006).
 - Architecture-audit findings F1-F6 are remediated (see that file's status table). A

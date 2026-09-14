@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "module_id": "b4-code-review",
+  "generated_at": "2026-09-14T10:35:02.934964+00:00",
+  "dry_run": false,
+  "config": {
+    "repeats": 1,
+    "timeout_sec": null,
+    "agent_command": "N/A - this ablation dispatches independent review agents (Claude, general-purpose, following review-code's actual process) against 5 real, hand-constructed PRs with documented ground truth, not live coding-agent invocations against a target repo. Each (arm, task) pair is one independent review, not repeated - see results/README.md for why n=1 per cell here, unlike B0-C3's ablations. agent_wall_sec is not meaningful for this unit (set to 0.0) - reviews are reasoning/text tasks with no comparable execution-time semantics to a coding task.",
+    "arms": [
+      "spec-provided",
+      "spec-withheld"
+    ],
+    "tasks": [
+      "pr1",
+      "pr2",
+      "pr3",
+      "pr4",
+      "pr5"
+    ],
+    "verifiers": {
+      "pr1": "hand-documented ground truth, see results/lab-materials/prs/ground-truth.md",
+      "pr2": "hand-documented ground truth, see results/lab-materials/prs/ground-truth.md",
+      "pr3": "hand-documented ground truth, see results/lab-materials/prs/ground-truth.md",
+      "pr4": "hand-documented ground truth, see results/lab-materials/prs/ground-truth.md",
+      "pr5": "hand-documented ground truth, see results/lab-materials/prs/ground-truth.md"
+    }
+  },
+  "runs": [
+    {
+      "arm": "spec-provided",
+      "task": "pr1",
+      "repeat": 0,
+      "passed": true,
+      "verdict": "NEEDS FIXES",
+      "agent_returncode": 0,
+      "agent_wall_sec": 0.0,
+      "verifier_wall_sec": 0.0,
+      "agent_tail": "### Scope\n\nThis PR loosens `update_item`'s permission dependency from `EditableItem` (editor-or-above) to `ViewableItem` (viewer-or-above) so that a viewer can toggle an item's read status through the existing `PUT /items/{id}` endpoint.\n\n### Spec compliance (Axis 1)\n\n- SC-2 (viewer read-only; write returns 403) \u2014 Not met. `update_item` now runs behind `ViewableItem`, and the handler body still applies the entire `ItemUpdate` payload. A viewer can now write any field on a team item via PUT, directly regressing `test_viewer_read_only`.\n- All other SCs: met/not applicable, unaffected.\n\n### Confirmed issues\n\n1. Viewers get full write access to team items, not just a read-status toggle. No field-level restriction exists anywhere in the diff.\n2. The docstring is misleading, not just incomplete: claims read-status is scoped as metadata, but the code doesn't distinguish it from content at all.\n3. No test changes accompany a change to permission-critical code.\n\n### Standards & architecture (Axis 2)\n\n- Naming now lies about behavior: ViewableItem was only ever used for reads before this.\n- Permission logic is no longer centralized/consistent with the file's one-dependency-per-required-role pattern.\n\n### Verdict\nNEEDS FIXES \u2014 grants viewers full write access to team items' content, directly violating SC-2.",
+      "verifier_tail": "ground truth comparison: MATCH"
+    },
+    {
+      "arm": "spec-provided",
+      "task": "pr2",
+      "repeat": 0,
+      "passed": false,
+      "verdict": "NEEDS FIXES",
+      "agent_returncode": 0,
+      "agent_wall_sec": 0.0,
+      "verifier_wall_sec": 0.0,
+      "agent_tail": "### Scope\nAdds GET /{team_id}/members, returning the full membership roster to any current member (any role) or superuser, 404 if team missing, 403 if not a member.\n\n### Spec compliance (Axis 1)\nNone of the spec's 8 graded Success Criteria touch this endpoint, and the spec never mentions a roster-listing capability at all. Nothing regresses a graded criterion, but nothing in the safety net would catch a future regression here either.\n\n### Confirmed issues\n1. Zero test coverage for the new endpoint. No test exercises: a member succeeding, a non-member getting 403, or a nonexistent team getting 404. This is a permission-bearing endpoint added with no automated check.\n\n### Plausible issues\n- DRY: the \"team exists\" 404 block is now duplicated a third time (previously in add_member and remove_member).\n- No pagination, unlike items.py's read_items.\n\n### Standards & architecture (Axis 2)\nFollows the file's existing idioms exactly; no new pattern introduced; no PII leak; parameterized query, no injection risk.\n\n### Clean\nRoute placement, superuser bypass, response model all correct and consistent.\n\n### Verdict\nNEEDS FIXES \u2014 the implementation itself is correct, in-pattern, and doesn't regress any of the spec's 8 graded Success Criteria, but it ships a new permission-bearing endpoint with no test coverage at all, which should be added before merge.\n\nNOTE: ground truth called this PR clean/READY. This reviewer's divergence is a stricter test-coverage bar (citing review-code's own \"do existing tests cover the new behavior\" check), not a false-positive on a code defect that doesn't exist - arguably a defensible, even correct, stricter standard rather than a genuine miss.",
+      "verifier_tail": "ground truth comparison: DIVERGES (reviewer stricter than ground truth, see note)"
+    },
+    {
+      "arm": "spec-provided",
+      "task": "pr3",
+      "repeat": 0,
+      "passed": true,
+      "verdict": "NEEDS FIXES",
+      "agent_returncode": 0,
+      "agent_wall_sec": 0.0,
+      "verifier_wall_sec": 0.0,
+      "agent_tail": "### Scope\nAdds PATCH /teams/{team_id} letting a team owner (or superuser) rename a team.\n\n### Spec compliance (Axis 1)\nThe spec never mentions team renaming anywhere. None of the 8 SCs apply. This PR falls entirely outside the given spec's scope; no eval exists for \"rename team\" at all.\n\n### Confirmed issues\n1. Permission check is duplicated instead of reusing the existing _require_owner helper (used by add_member and remove_member). Direct DRY/architecture violation - if the ownership rule ever changes, this copy will silently drift out of sync.\n2. New schema (TeamRename) defined inline in teams.py instead of in app.models, breaking the file's established convention.\n3. Import hygiene: `from sqlmodel import SQLModel` added as a second, separate import from a module already imported two lines earlier, breaking import ordering.\n4. No test added.\n\n### Plausible issues\n- No input validation on `name` (empty string or arbitrarily long value accepted).\n\n### Standards & architecture (Axis 2)\nNaming/docstring style match conventions; centralization check FAILS (issue #1 above is the clearest architectural regression in the diff).\n\n### Clean\nRoute registration, HTTP method, response model all correct; no regressions to existing callers.\n\n### Verdict\nNEEDS FIXES \u2014 the new endpoint duplicates centralized permission logic instead of calling _require_owner, defines its schema outside the established convention, and ships with no test coverage.",
+      "verifier_tail": "ground truth comparison: MATCH"
+    },
+    {
+      "arm": "spec-provided",
+      "task": "pr4",
+      "repeat": 0,
+      "passed": true,
+      "verdict": "NEEDS FIXES",
+      "agent_returncode": 0,
+      "agent_wall_sec": 0.0,
+      "verifier_wall_sec": 0.0,
+      "agent_tail": "### Scope\nAdds DELETE /teams/{team_id}/items, letting a caller with editor-or-owner role bulk-delete every item belonging to a team in one request.\n\n### Spec compliance (Axis 1)\n- SC-3 (editor read/write, delete returns 403 - delete is owner-only) \u2014 Not met. test_editor_read_write_no_delete asserts an editor gets 403 on DELETE /items/{id}. This PR grants that same editor a second path that succeeds and deletes that very item (and every other item in the team) - directly contradicts the spec's Goals section too (\"owner ... deletes\"; editor is never granted delete).\n- 7 of 8 other criteria unaffected/met.\n\n### Confirmed issues\n1. Authorization bypass of the owner-only delete rule - a privilege-escalation-shaped bug, not a matter of taste.\n2. Bypasses the codebase's single permission-enforcement point (get_item_with_permission / _effective_role), reimplementing an inline check that doesn't match the rule actually enforced for delete elsewhere.\n3. No tests added for a feature area with an established one-test-per-behavior convention - critically, no test for the editor path, exactly where the bug would have been caught.\n\n### Plausible issues\n- Docstring is misleading: claims parity with \"the per-item EditableItem dependency used elsewhere for this team's item operations,\" but EditableItem is used for update, not delete - single-item delete uses OwnedItem (owner floor). The comment appears to justify the wrong permission floor and likely reflects the actual root cause of the bug.\n\n### Standards & architecture (Axis 2)\nArchitecture violation: reintroduces per-handler inline permission logic in a codebase that deliberately centralized this exact decision.\n\n### Verdict\nNEEDS FIXES \u2014 the endpoint lets editors delete team items, directly violating the spec's owner-only delete rule (Goals + SC-3, and the very test that encodes it) via a hand-rolled permission check that bypasses the codebase's centralized authorization dependency.",
+      "verifier_tail": "ground truth comparison: MATCH"
+    },
+    {
+      "arm": "spec-provided",
+      "task": "pr5",
+      "repeat": 0,
+      "passed": true,
+      "verdict": "NEEDS FIXES",
+      "agent_returncode": 0,
+      "agent_wall_sec": 0.0,
+      "verifier_wall_sec": 0.0,
+      "agent_tail": "### Scope\nAdds a GET /teams/{team_id} endpoint to fetch a single team's id/name by UUID.\n\n### Spec compliance (Axis 1)\nNone of the 8 SCs apply - this diff touches none of the item-permission or membership-management code the spec's evals cover. The ticket itself isn't a stated Goal or SC either.\n\n### Confirmed issues\n1. No authentication at all on the new endpoint. read_team's signature omits current_user: CurrentUser, which every other handler in this file declares. Any anonymous caller can enumerate team ids and pull back team details.\n2. No membership/role check on read, even setting auth aside - contrast with items.py's read_item, gated through ViewableItem.\n\n### Plausible issues\n- Unknown blast radius of TeamPublic (models.py not provided).\n- No tests included.\n- DRY: team-not-found 404 check duplicated a third time (matches existing style, not a new issue).\n\n### Standards & architecture (Axis 2)\nArchitecture violation: permission logic is supposed to be centralized through _require_owner in this file; new endpoint sidesteps that model completely.\n\n### Verdict\nNEEDS FIXES \u2014 the endpoint ships with no authentication dependency at all, letting anonymous callers read any team's details by id, and additionally lacks any membership check once auth is fixed.",
+      "verifier_tail": "ground truth comparison: MATCH"
+    },
+    {
+      "arm": "spec-withheld",
+      "task": "pr1",
+      "repeat": 0,
+      "passed": true,
+      "verdict": "NEEDS FIXES",
+      "agent_returncode": 0,
+      "agent_wall_sec": 0.0,
+      "verifier_wall_sec": 0.0,
+      "agent_tail": "### Scope\nThis PR relaxes the role check on PUT /items/{id} from editor to viewer, with the stated intent of letting viewers toggle an item's read status.\n\n### Spec compliance (Axis 1)\nSpec axis skipped \u2014 no spec found.\n\n### Confirmed issues\n\n1. Broken access control / privilege escalation. I checked the app's actual schema (app/models.py, app/api/deps.py) and ItemUpdate has exactly two fields: title and description. There is no is_read / read-status field anywhere. This change does not scope anything to \"read status\" \u2014 it simply lets any viewer overwrite an item's title and description, which previously required editor role.\n2. Docstring is misleading relative to the actual code.\n3. No tests changed for a behavior change that flips a 403-vs-200 outcome for an entire role tier.\n\n### Standards & architecture (Axis 2)\n- app/api/deps.py explicitly documents get_item_with_permission as \"the single enforcement point for item permissions,\" operating per-item, not per-field. This PR's actual requirement (field-level distinction) cannot be expressed by that item-level gate; reusing the coarse dependency and lowering its threshold is the wrong tool.\n- Least-privilege is violated: viewers now have write access to content fields unrelated to \"read status.\"\n\n### Verdict\nNEEDS FIXES \u2014 the diff grants viewers write access to an item's title/description (a genuine broken-access-control regression) without introducing the read-status field the ticket describes.\n\nNOTE: this reviewer independently verified the codebase's actual model schema (app/models.py) despite having no spec, and derived the correct conclusion entirely from reading the real ItemUpdate fields and the deps.py architecture comment - not from any written specification.",
+      "verifier_tail": "ground truth comparison: MATCH"
+    },
+    {
+      "arm": "spec-withheld",
+      "task": "pr2",
+      "repeat": 0,
+      "passed": true,
+      "verdict": "READY",
+      "agent_returncode": 0,
+      "agent_wall_sec": 0.0,
+      "verifier_wall_sec": 0.0,
+      "agent_tail": "### Scope\nAdds a new GET /teams/{team_id}/members endpoint so any current team member (any role) can list the team roster; non-members get 403.\n\n### Spec compliance (Axis 1)\nSpec axis skipped \u2014 no spec found.\n\n### Confirmed issues\nNone found. Logic was traced end-to-end (404 -> permission check -> query) and matches the pattern used by every other handler in this file.\n\n### Plausible issues\n- Unverified response shape (TeamMembershipPublic schema not in review materials).\n- Unbounded roster query, no pagination.\n- 404-before-403 ordering is a minor enumeration-oracle, but copied verbatim from existing add_member/remove_member convention.\n\n### Standards & architecture (Axis 2)\n- DRY: the team-exists 404 check now appears a third time; per the project's own DRY rule (\"three occurrences means the helper was overdue\"), this was the natural point to extract a helper. Not introduced by this PR, but this PR tips it over the threshold.\n- Naming/style matches existing conventions; no SOLID or security-boundary violations.\n\n### Clean\nPermission logic correctly matches the ticket; no breaking changes; correct query pattern.\n\n### Verdict\nREADY \u2014 no confirmed bugs or security issues; the only findings are pre-existing-pattern nitpicks that don't block this small, correctly-scoped change.",
+      "verifier_tail": "ground truth comparison: MATCH"
+    },
+    {
+      "arm": "spec-withheld",
+      "task": "pr3",
+      "repeat": 0,
+      "passed": true,
+      "verdict": "NEEDS FIXES",
+      "agent_returncode": 0,
+      "agent_wall_sec": 0.0,
+      "verifier_wall_sec": 0.0,
+      "agent_tail": "### Scope\nAdds a PATCH /teams/{team_id} endpoint (rename_team) that lets a team owner (or superuser) change a team's name.\n\n### Spec compliance (Axis 1)\nSpec axis skipped \u2014 no spec found.\n\n### Confirmed issues\n1. Permission check is duplicated instead of reusing the existing centralized helper _require_owner. Direct DRY violation; breaks the file's own architecture convention that permission logic is centralized in one place.\n2. New request model defined in the wrong layer (locally in teams.py instead of app.models, where every other schema lives).\n3. Import is split instead of merged, and inserted out of order.\n\n### Plausible issues\n- No validation on the new team name.\n- No test coverage visible for the new endpoint.\n\n### Standards & architecture (Axis 2)\nCentralization (the specific architecture check requested for this review): Fails - this is the clearest architectural regression in the diff. Error handling / status codes match existing ordering convention.\n\n### Clean\nRoute method and response model are appropriate; core authorization outcome is correct even though implemented redundantly.\n\n### Verdict\nNEEDS FIXES \u2014 the permission check must be refactored to call the existing _require_owner helper instead of duplicating it, and the TeamRename model/import should be aligned with the file's existing conventions before merge.\n\nNOTE: this reviewer independently found the identical three issues (DRY duplication, wrong-layer schema, import hygiene) as the spec-provided reviewer, purely from reading the file's own internal conventions - none of these three issues are spec-related at all, so both conditions were expected to converge here.",
+      "verifier_tail": "ground truth comparison: MATCH"
+    },
+    {
+      "arm": "spec-withheld",
+      "task": "pr4",
+      "repeat": 0,
+      "passed": true,
+      "verdict": "NEEDS FIXES",
+      "agent_returncode": 0,
+      "agent_wall_sec": 0.0,
+      "verifier_wall_sec": 0.0,
+      "agent_tail": "### Scope\nAdds DELETE /teams/{team_id}/items, letting any team editor or owner bulk-delete every Item belonging to a team in one call.\n\n### Spec compliance (Axis 1)\nSpec axis skipped \u2014 no spec found.\n\n### Confirmed issues\n\n1. Authorization level is inconsistent with (and weaker than) the existing per-item delete path. In items.py, deleting ONE item requires Role.owner (OwnedItem). This new endpoint requires only Role.editor to delete EVERY item on the team in one call. A user who cannot delete a single item they don't own can wipe the team's entire item collection through this endpoint.\n2. The endpoint bypasses the codebase's existing centralized item-permission abstraction (get_item_with_permission) and reimplements a partial, divergent check inline.\n\n### Plausible issues\n- The docstring justifies the editor threshold by claiming it matches \"the per-item EditableItem dependency used elsewhere\" - but in the only items.py shown, EditableItem is defined but never actually used by any route; the actual analogous operation (delete) requires Role.owner, not editor. The docstring's justification is factually wrong.\n- No tests added.\n\n### Standards & architecture (Axis 2)\nDRY / permission-check idiom drift: item-level authorization is meant to flow through get_item_with_permission; this endpoint routes around it instead of extending it.\n\n### Verdict\nNEEDS FIXES \u2014 the new endpoint lets a lower-privileged role (editor) perform a more destructive action (delete all items) than the existing single-item delete permits for that same role (owner-only), and it does so by bypassing the codebase's shared per-item permission dependency rather than extending it.\n\nNOTE: this reviewer caught the SAME issue as the spec-provided reviewer, purely by cross-referencing delete_item's OwnedItem threshold (in items.py) against the new endpoint's editor threshold (in teams.py) - no spec needed, just reading the sibling file and noticing the inconsistency in already-shipped, correct precedent.",
+      "verifier_tail": "ground truth comparison: MATCH"
+    },
+    {
+      "arm": "spec-withheld",
+      "task": "pr5",
+      "repeat": 0,
+      "passed": true,
+      "verdict": "NEEDS FIXES",
+      "agent_returncode": 0,
+      "agent_wall_sec": 0.0,
+      "verifier_wall_sec": 0.0,
+      "agent_tail": "### Scope\nAdds a new GET /teams/{team_id} endpoint that fetches and returns a single team's details by ID.\n\n### Spec compliance (Axis 1)\nSpec axis skipped \u2014 no spec found.\n\n### Confirmed issues\n\nCritical \u2014 no authentication or authorization on the new endpoint. Compared against all four sibling handlers (create_team, add_member, remove_member all take current_user: CurrentUser and enforce a permission check); read_team takes only session and team_id. It doesn't even declare a current_user dependency, let alone call _require_owner or any membership check. Every other write path in this router funnels through centralized permission logic; this new read path bypasses that architecture entirely. Anyone, logged in or not, member or not, can enumerate team_id values and read any team's details. This is a straightforward IDOR / broken access control issue, directly visible from the diff against the file's own established pattern.\n\n### Plausible issues\n- Unknown blast radius of TeamPublic (models.py not provided).\n- No tests included in the diff.\n\n### Standards & architecture (Axis 2)\nArchitecture violation: permission logic is supposed to be centralized through _require_owner in this file; the new endpoint sidesteps that model completely instead of adding an equivalent check.\n\n### Verdict\nNEEDS FIXES \u2014 the new endpoint has no authentication or authorization at all, letting any caller read any team's details by guessing its ID, which breaks the access-control pattern every other handler in this file enforces.\n\nNOTE: this reviewer caught the identical critical issue as the spec-provided reviewer, purely by comparing the new handler's signature against its three siblings in the same file - a missing-auth bug this glaring didn't require a spec to find.",
+      "verifier_tail": "ground truth comparison: MATCH"
+    }
+  ],
+  "summary": {
+    "per_arm": {
+      "spec-provided": {
+        "n": 5,
+        "pass_rate": 0.8,
+        "median_agent_wall_sec": 0.0,
+        "per_task_pass_rate": {
+          "pr1": 1.0,
+          "pr2": 0.0,
+          "pr3": 1.0,
+          "pr4": 1.0,
+          "pr5": 1.0
+        }
+      },
+      "spec-withheld": {
+        "n": 5,
+        "pass_rate": 1.0,
+        "median_agent_wall_sec": 0.0,
+        "per_task_pass_rate": {
+          "pr1": 1.0,
+          "pr2": 1.0,
+          "pr3": 1.0,
+          "pr4": 1.0,
+          "pr5": 1.0
+        }
+      }
+    },
+    "comparison": {
+      "baseline_arm": "spec-provided",
+      "treatment_arm": "spec-withheld",
+      "pass_rate_delta": 0.2,
+      "ci95": [
+        0.0,
+        0.6
+      ],
+      "crosses_zero": true
+    },
+    "comparisons": [
+      {
+        "baseline_arm": "spec-provided",
+        "treatment_arm": "spec-withheld",
+        "pass_rate_delta": 0.2,
+        "ci95": [
+          0.0,
+          0.6
+        ],
+        "crosses_zero": true
+      }
+    ],
+    "safety": null
+  }
+}
