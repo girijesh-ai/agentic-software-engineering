@@ -94,20 +94,20 @@ Failing any of these means it doesn't merge, however good the prose is.
 
 Kept current so an agent doesn't rediscover them or paper over them:
 
-- `tools/audit.sh` exits 0. B0-B5, C1, C3 have real results; every hypothesis
-  ran inconclusive-to-opposite - read the §6s. C3: 28 failures, one shared
-  cause. B4: spec-withheld matched spec-provided via sibling-code precedent,
-  not the spec. B5: structured handoff finished less often (67% vs 100%,
-  CI excludes zero) - `init.sh` reads as Bash needing approval headless.
+- `tools/audit.sh` exits 0. B0-B5, C1, C3, C4 real results, every hypothesis
+  inconclusive-to-opposite - read the §6s. C3: 28 failures, one cause. B4:
+  spec-withheld matched spec-provided via sibling-code precedent. B5:
+  structured handoff hurt completion (67% vs 100%, `init.sh` = Bash needing
+  approval headless). C4 reran it on 5 fresh tasks: dead-even null (93/93),
+  likely an interruption-narrative confound, not the wording.
 - Wrong-problem grading ran (B1, 2 AI graders, 100% agreement, zero found) -
   disclosed substitute for human graders, not a closed gap; see B1's `grading/`.
-- Running thread (B0-B5 done): `~/Documents/ai-swe-course-scratch/fsft`.
-- Fall 2026 claim downgraded to `overlaps` (11 gaps, COV008), not written up as
-  units; Fall 2025 holds unweakened, secondary evidence for 9/10 weeks (COV006).
+- Running thread (B0-C4 done): `~/Documents/ai-swe-course-scratch/fsft`.
+- Fall 2026 claim downgraded to `overlaps` (11 gaps, COV008); Fall 2025 holds
+  unweakened, secondary evidence for 9/10 weeks (COV006).
 - Architecture-audit findings F1-F6 are remediated (see that file's status table).
 - `skills.lock.json` is pinned to plugin 1.0.1 and unverified against anything newer.
-- `spec_lint.py` is heuristic; it will produce false positives. Its job is to force the
-  question. Do not add checks that can't be explained in one sentence.
+- `spec_lint.py` is heuristic and will false-positive; its job is to force the question.
 
 Agent picking up work here: these, in this order, are the backlog. Pick exactly
 one. Do not attempt two.

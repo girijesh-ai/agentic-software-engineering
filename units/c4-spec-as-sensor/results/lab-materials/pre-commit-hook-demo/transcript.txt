@@ -1,0 +1,34 @@
+Demo: tools/pre-commit-spec-lint installed as .git/hooks/pre-commit in a
+throwaway repo, staging bad-spec.md, attempting to commit.
+
+$ git add specs/rate-limiting.md
+$ git commit -m "Add rate limiting spec"
+pre-commit-spec-lint: checking 1 spec(s): specs/rate-limiting.md
+FAIL: specs/rate-limiting.md — 2 error(s), 1 warning(s).
+
+  ERROR SPEC002  SC-1  (line 11)
+    No eval named. This is a feedforward guide with no feedback sensor.
+
+  ERROR SPEC004  rate-limiting.md  (line 9)
+    No criterion describes behaviour when the feature fails.
+
+  WARNING SPEC005  rate-limiting.md  (line 1)
+    No Non-goals section.
+
+pre-commit-spec-lint: blocked. Fix the errors above, or
+'git commit --no-verify' to override (not recommended - see AGENTS.md).
+commit exit: 1
+
+Replacing bad-spec.md's content with fixed-spec.md's content (named eval,
+a failure-behaviour criterion, a Non-goals section), then re-attempting:
+
+$ git add specs/rate-limiting.md
+$ git commit -m "Add rate limiting spec"
+pre-commit-spec-lint: checking 1 spec(s): specs/rate-limiting.md
+PASS: specs/rate-limiting.md — all criteria measurable, evaled, and scoped.
+[main (root-commit) edbd5d4] Add rate limiting spec
+commit exit: 0
+
+Same two SPEC002/SPEC004 errors and SPEC005 warning that the CLI reports
+when run directly - the hook is a thin wrapper (see
+tools/pre-commit-spec-lint's header), not a second, divergent set of rules.

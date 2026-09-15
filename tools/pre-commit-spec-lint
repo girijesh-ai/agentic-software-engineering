@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Pre-commit gate for spec quality: SC-2 made mechanical instead of a
+# discipline you have to remember. Install with:
+#
+#   ln -sf ../../tools/pre-commit-spec-lint .git/hooks/pre-commit
+#
+# Lints every staged Markdown file that has a "## Success Criteria" section -
+# skips everything else, so this never fires on an unrelated commit. Runs
+# spec_lint.py without --strict (warnings do not block a commit; only
+# SPEC001-005/007 errors do - see SC-2's eval in docs/COURSE-SPEC.md).
+set -uo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+staged_specs=()
+while IFS= read -r f; do
+    [ -z "$f" ] && continue
+    [ -f "$f" ] || continue
+    case "$f" in
+        *.md) ;;
+        *) continue ;;
+    esac
+    if grep -q "^## Success Criteria" "$f" 2>/dev/null; then
+        staged_specs+=("$f")
+    fi
+done < <(git diff --cached --name-only --diff-filter=ACM)
+
+if [ "${#staged_specs[@]}" -eq 0 ]; then
+    exit 0
+fi
+
+echo "pre-commit-spec-lint: checking ${#staged_specs[@]} spec(s): ${staged_specs[*]}"
+python3 tools/spec_lint.py "${staged_specs[@]}"
+status=$?
+
+if [ "$status" -ne 0 ]; then
+    echo ""
+    echo "pre-commit-spec-lint: blocked. Fix the errors above, or"
+    echo "'git commit --no-verify' to override (not recommended - see AGENTS.md)."
+fi
+
+exit "$status"
