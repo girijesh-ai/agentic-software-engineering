@@ -1,0 +1,23 @@
+{
+  "features": [
+    {
+      "id": "F1",
+      "description": "List a team's members (GET /teams/{team_id}/members), visible to any current member.",
+      "status": "done",
+      "verify": "cd backend && FASTAPI_ENV=development uv run pytest tests/ablation/test_b5_features.py -k f1 -q"
+    },
+    {
+      "id": "F2",
+      "description": "Let a team owner rename their team (PATCH /teams/{team_id}).",
+      "status": "in_progress",
+      "note": "Endpoint and permission check are implemented. NOT YET VERIFIED - do not assume this is finished without running its test.",
+      "verify": "cd backend && FASTAPI_ENV=development uv run pytest tests/ablation/test_b5_features.py -k f2 -q"
+    },
+    {
+      "id": "F3",
+      "description": "Let a team member view a team's details by ID (GET /teams/{team_id}); non-members and unauthenticated callers must be denied.",
+      "status": "not_started",
+      "verify": "cd backend && FASTAPI_ENV=development uv run pytest tests/ablation/test_b5_features.py -k f3 -q"
+    }
+  ]
+}
