@@ -41,6 +41,11 @@ jobs:
         continue-on-error: true
         run: python3 tools/check_coverage.py --allow-planned
 
+      - name: garden_docs.py
+        id: garden_docs
+        continue-on-error: true
+        run: python3 tools/garden_docs.py
+
       # Each gate runs regardless of the others so one red gate never hides
       # the state of the rest - see AGENTS.md "record every failure".
       - name: Report gate results
@@ -50,10 +55,12 @@ jobs:
           echo "spec_lint.py:         ${{ steps.spec_lint.outcome }}"
           echo "check_skills_map.py:  ${{ steps.skills_map.outcome }}"
           echo "check_coverage.py:    ${{ steps.coverage.outcome }}"
+          echo "garden_docs.py:       ${{ steps.garden_docs.outcome }}"
           if [ "${{ steps.audit.outcome }}" != "success" ] || \
              [ "${{ steps.spec_lint.outcome }}" != "success" ] || \
              [ "${{ steps.skills_map.outcome }}" != "success" ] || \
-             [ "${{ steps.coverage.outcome }}" != "success" ]; then
+             [ "${{ steps.coverage.outcome }}" != "success" ] || \
+             [ "${{ steps.garden_docs.outcome }}" != "success" ]; then
             echo "one or more gates failed"
             exit 1
           fi

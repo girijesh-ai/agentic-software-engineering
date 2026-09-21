@@ -1,0 +1,6 @@
+garden_docs: 1 finding(s).
+
+  STALE002  docs/BUILD-ORDER.md:96
+    states the order 'c2 -> c3', but 'c3' has real shipped results and 'c2' does not exist yet - the actual build order diverged from this plan.
+    Fix: Note the actual order next to this chain, or mark this section historical - 'c2' was skipped ahead of, not before, 'c3'.
+

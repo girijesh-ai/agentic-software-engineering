@@ -5,6 +5,13 @@ Where the work happens, in what sequence, and why that sequence.
 Written as a handoff. If you're an agent picking this up cold, this file plus
 `AGENTS.md` is your brief.
 
+**Historical.** Written before any unit had real numbers; Sessions 0-1 below are
+done (`tools/audit.sh` exists and passes, B1 has real results). Kept for the
+reasoning, not as a live task list - `AGENTS.md` § Known gaps is the current
+backlog. The prescribed running-thread order below was not what happened: C1
+and C3 shipped before C2 (see `units/c2-repo-as-system-of-record/README.md`
+§ 6, found by that unit's own doc-gardener sensor).
+
 ---
 
 ## Where
@@ -44,12 +51,14 @@ claude plugin install spec-driven-engineering@spec-driven-engineering-dev
 
 Then, in order:
 
-1. **Write `tools/audit.sh`.** Referenced in six places and doesn't exist. It should check:
-   `AGENTS.md` ≤ 120 lines, every `units/*/README.md` has all eight required sections
-   including *What makes this obsolete*, internal links resolve, every unit declares
-   `<!-- capabilities: … -->`, `CS146S-COVERAGE.md` is under 12 months old, and every
-   shipped unit has a non-dry-run `results/authors-run.json`.
-   It will fail immediately. That's correct — it's measuring a half-built repo.
+1. **Write `tools/audit.sh`.** (Done - it now exists and checks exactly the six
+   things this step originally specified: `AGENTS.md` ≤ 120 lines, every
+   `units/*/README.md` has all eight required sections including *What makes
+   this obsolete*, internal links resolve, every unit declares
+   `<!-- capabilities: … -->`, `CS146S-COVERAGE.md` is under 12 months old, and
+   every shipped unit has a non-dry-run `results/authors-run.json`. It passes
+   on `main` now that units exist - this step described the repo before any
+   of that was true.)
 2. **Wire CI.** One workflow running `audit.sh`, `spec_lint.py docs/COURSE-SPEC.md`,
    `check_skills_map.py --plugin-dir …`, `check_coverage.py --allow-planned`.
    Expect red on W2 and on missing results. Red-with-known-reasons beats no signal.

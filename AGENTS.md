@@ -94,17 +94,17 @@ Failing any of these means it doesn't merge, however good the prose is.
 
 Kept current so an agent doesn't rediscover them or paper over them:
 
-- `tools/audit.sh` exits 0. B0-B5, C1, C3, C4 real results, every hypothesis
+- `tools/audit.sh` exits 0 (skips `results/lab-materials/` fixtures for
+  link checks). B0-B5, C1-C4 real results, every hypothesis
   inconclusive-to-opposite - read the §6s. C3: 28 failures, one cause. B4:
-  spec-withheld matched spec-provided via sibling-code precedent. B5:
-  structured handoff hurt completion (67% vs 100%, `init.sh` = Bash needing
-  approval headless). C4 reran it on 5 fresh tasks: dead-even null (93/93),
-  likely an interruption-narrative confound, not the wording.
-- Wrong-problem grading ran (B1, 2 AI graders, 100% agreement, zero found) -
-  disclosed substitute for human graders, not a closed gap; see B1's `grading/`.
-- Running thread (B0-C4 done): `~/Documents/ai-swe-course-scratch/fsft`.
-- Fall 2026 claim downgraded to `overlaps` (11 gaps, COV008); Fall 2025 holds
-  unweakened, secondary evidence for 9/10 weeks (COV006).
+  sibling-code precedent beat spec-withheld. B5: structured handoff hurt
+  completion (67% vs 100%). C4 reran it fresh: dead-even null, likely an
+  interruption-narrative confound. C2: monolithic vs structured docs hit a
+  100% ceiling on fact-lookup - tests retrieval, not the judgment claim.
+- Wrong-problem grading ran (B1, 2 graders, 100% agreement) - disclosed
+  substitute for human graders, not a closed gap; see B1's `grading/`.
+- Running thread (B0-C4 done, C2 tests this repo instead): `~/Documents/ai-swe-course-scratch/fsft`.
+- Fall 2026 claim downgraded to `overlaps` (11 gaps, COV008); Fall 2025 holds.
 - Architecture-audit findings F1-F6 are remediated (see that file's status table).
 - `skills.lock.json` is pinned to plugin 1.0.1 and unverified against anything newer.
 - `spec_lint.py` is heuristic and will false-positive; its job is to force the question.

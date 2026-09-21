@@ -1,0 +1,10 @@
+garden_docs: 2 finding(s).
+
+  STALE001  docs/BUILD-ORDER.md:47
+    line says '1. **Write `tools/audit.sh`.** Referenced in six places and doesn't exist. It should check:', naming 'tools/audit.sh', which exists and is non-empty now.
+    Fix: Update or remove this line - 'tools/audit.sh' is real, this doc is describing a repo state that no longer holds.
+
+  STALE002  docs/BUILD-ORDER.md:87
+    states the order 'c2 -> c3', but 'c3' has real shipped results and 'c2' does not exist yet - the actual build order diverged from this plan.
+    Fix: Note the actual order next to this chain, or mark this section historical - 'c2' was skipped ahead of, not before, 'c3'.
+

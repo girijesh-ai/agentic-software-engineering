@@ -1,0 +1,442 @@
+{
+  "schema_version": 1,
+  "module_id": "c2-repo-as-system-of-record",
+  "generated_at": "2026-09-21T03:31:08.824837+00:00",
+  "dry_run": false,
+  "config": {
+    "repeats": 3,
+    "timeout_sec": 600,
+    "agent_command": "claude -p \"$(cat {prompt_file})\" --permission-mode acceptEdits --model claude-haiku-4-5",
+    "arms": [
+      "structured",
+      "monolithic"
+    ],
+    "tasks": [
+      "agents-md-limit",
+      "obsolete-section",
+      "sc5-eval",
+      "spec-lint-tool",
+      "never-invent-rule"
+    ],
+    "verifiers": {
+      "agents-md-limit": "python3 check_answer.py ANSWER.md \"120\" \"audit.sh\"",
+      "obsolete-section": "python3 check_answer.py ANSWER.md \"obsolete\"",
+      "sc5-eval": "python3 check_answer.py ANSWER.md \"SC-5\" \"bootstrap\"",
+      "spec-lint-tool": "python3 check_answer.py ANSWER.md \"spec_lint\"",
+      "never-invent-rule": "python3 check_answer.py ANSWER.md \"invent\" \"ablation.py\""
+    }
+  },
+  "runs": [
+    {
+      "arm": "structured",
+      "task": "agents-md-limit",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 25.0,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. AGENTS.md has a maximum of **120 lines**, enforced by `tools/audit.sh` lines 13-17. The answer is now in ANSWER.md.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['120', 'audit.sh']\n"
+    },
+    {
+      "arm": "structured",
+      "task": "agents-md-limit",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 25.99,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. AGENTS.md has a 120-line maximum, enforced by `tools/audit.sh` (lines 13-17). Answer written to ANSWER.md.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['120', 'audit.sh']\n"
+    },
+    {
+      "arm": "structured",
+      "task": "agents-md-limit",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 31.15,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. AGENTS.md can be a maximum of **120 lines**, and **`tools/audit.sh`** enforces this limit. The check appears on lines 13-17 of the script, which uses `wc -l` to count lines and fails the build if the file exceeds the cap.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['120', 'audit.sh']\n"
+    },
+    {
+      "arm": "structured",
+      "task": "obsolete-section",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 31.94,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. The required section is **\"7. What makes this obsolete\"** \u2014 it names the model capability or tooling change that retires the unit's technique. This is mandated by Success Criterion 8 in the course spec.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['obsolete']\n"
+    },
+    {
+      "arm": "structured",
+      "task": "obsolete-section",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 16.58,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. The required section is **\"What makes this obsolete\"** \u2014 it appears as section 7 in the eight-section structure defined in `docs/CURRICULUM.md` \u00a7 Unit shape, and it's where each unit states the model or tooling change that would retire that technique.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['obsolete']\n"
+    },
+    {
+      "arm": "structured",
+      "task": "obsolete-section",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 16.82,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. The required section is **\"What makes this obsolete\"** (section 7 of the eight sections). This section describes what conditions or improvements would make the unit's technique obsolete or outdated.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['obsolete']\n"
+    },
+    {
+      "arm": "structured",
+      "task": "sc5-eval",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 19.65,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. **SC-5** (\"A learner can measure a harness change\") requires a **bootstrap confidence interval** for the eval. The criterion specifies N\u22655 tasks \u00d7 K\u22653 repeats across two arms, validated with `tools/ablation.py`.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['SC-5', 'bootstrap']\n"
+    },
+    {
+      "arm": "structured",
+      "task": "sc5-eval",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 19.46,
+      "verifier_wall_sec": 0.04,
+      "agent_tail": "Done. The answer is **SC-5** \u2014 \"A learner can measure a harness change\" requires a **bootstrap confidence interval** for evaluating results from a harness change experiment (N\u22655 tasks \u00d7 K\u22653 repeats, two arms).\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['SC-5', 'bootstrap']\n"
+    },
+    {
+      "arm": "structured",
+      "task": "sc5-eval",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 16.19,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. **SC-5** is the criterion for measuring a harness change, and it requires a **bootstrap confidence interval** for the eval.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['SC-5', 'bootstrap']\n"
+    },
+    {
+      "arm": "structured",
+      "task": "spec-lint-tool",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 17.64,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. The exact tool is **`spec_lint.py`** \u2014 it's referenced in AGENTS.md as the answer to \"What checks a spec?\" and performs checks SPEC002 (criterion has no eval) and SPEC006 (criterion has no measurable value), among others.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['spec_lint']\n"
+    },
+    {
+      "arm": "structured",
+      "task": "spec-lint-tool",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 15.39,
+      "verifier_wall_sec": 0.04,
+      "agent_tail": "Found it in AGENTS.md: the tool that checks a spec (including verifying that Success Criteria are measurable and carry a named eval) is **`spec_lint.py`**.\n\nAnswer written to ANSWER.md.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['spec_lint']\n"
+    },
+    {
+      "arm": "structured",
+      "task": "spec-lint-tool",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 19.97,
+      "verifier_wall_sec": 0.04,
+      "agent_tail": "Done. The exact tool is **`spec_lint.py`** located at `tools/spec_lint.py`. It's a computational sensor that checks specs through specific rules: SPEC002 enforces that each criterion names a concrete eval, SPEC003 prevents unfalsifiable vague adjectives without numbers, and SPEC006 warns when criteria lack measurable values.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['spec_lint']\n"
+    },
+    {
+      "arm": "structured",
+      "task": "never-invent-rule",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 13.91,
+      "verifier_wall_sec": 0.04,
+      "agent_tail": "Done. The answer is in ANSWER.md:\n\n**Never invent a result** \u2014 hand-written plausible results are forbidden. **`tools/ablation.py`** is the only source of truth for all `results/*.json` entries, which must come from real experimental runs.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['invent', 'ablation.py']\n"
+    },
+    {
+      "arm": "structured",
+      "task": "never-invent-rule",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 51.0,
+      "verifier_wall_sec": 0.04,
+      "agent_tail": "Done. The answer is in ANSWER.md:\n\n- **Never invent a result** \u2014 hand-written plausible tables are forbidden\n- **Use `tools/ablation.py`** \u2014 the real tool that produces results from actual runs\n\nThis rule (from AGENTS.md \u00a7 Rules) enforces that course content is grounded in measurement, not narrative.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['invent', 'ablation.py']\n"
+    },
+    {
+      "arm": "structured",
+      "task": "never-invent-rule",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 13.86,
+      "verifier_wall_sec": 0.04,
+      "agent_tail": "Done. The repo's cardinal rule: **never invent a result**\u2014a hand-written plausible table is a content kill. Results must come from `tools/ablation.py` running real experiments. If data doesn't exist yet, mark it as a placeholder; don't fake it.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['invent', 'ablation.py']\n"
+    },
+    {
+      "arm": "monolithic",
+      "task": "agents-md-limit",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 15.53,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. **AGENTS.md** can be a maximum of **120 lines**, enforced by **`tools/audit.sh`**. The answer is now in `ANSWER.md`.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['120', 'audit.sh']\n"
+    },
+    {
+      "arm": "monolithic",
+      "task": "agents-md-limit",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 12.35,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. I've written the answer to ANSWER.md. AGENTS.md in this repo has a 120-line maximum, enforced by `tools/audit.sh`.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['120', 'audit.sh']\n"
+    },
+    {
+      "arm": "monolithic",
+      "task": "agents-md-limit",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 11.71,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. ANSWER.md now contains the answer: **AGENTS.md can be a maximum of 120 lines, enforced by the `tools/audit.sh` script.**\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['120', 'audit.sh']\n"
+    },
+    {
+      "arm": "monolithic",
+      "task": "obsolete-section",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 13.44,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. The required section is **\"What makes this obsolete\"** \u2014 section 7 of 8 in every unit README. This section names the model capability or tooling change that retires the unit's technique, enforced by `tools/audit.sh`.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['obsolete']\n"
+    },
+    {
+      "arm": "monolithic",
+      "task": "obsolete-section",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 13.93,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. The required section is **\"What makes this obsolete\"** \u2014 section 7 of the eight required sections in every unit README. It specifies the model capability or tooling change that would retire the unit's technique.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['obsolete']\n"
+    },
+    {
+      "arm": "monolithic",
+      "task": "obsolete-section",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 13.99,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. The answer is **\"What makes this obsolete\"** \u2014 the seventh required section in every unit README. This section names the model capability or tooling change that retires the technique taught in that unit.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['obsolete']\n"
+    },
+    {
+      "arm": "monolithic",
+      "task": "sc5-eval",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 17.95,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. **SC-5** is the criterion that governs measuring a harness change, and it requires a **bootstrap confidence interval**. The full details are in ANSWER.md, which includes the criterion text, eval method, and context within the course structure.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['SC-5', 'bootstrap']\n"
+    },
+    {
+      "arm": "monolithic",
+      "task": "sc5-eval",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 15.02,
+      "verifier_wall_sec": 0.04,
+      "agent_tail": "Done. **SC-5** is the criterion (\"A learner can measure a harness change\"), and its eval requires a **bootstrap confidence interval** \u2014 specifically N\u22655 tasks \u00d7 K\u22653 repeats, two arms, reported to `tools/ablation.py validate <results>`.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['SC-5', 'bootstrap']\n"
+    },
+    {
+      "arm": "monolithic",
+      "task": "sc5-eval",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 14.54,
+      "verifier_wall_sec": 0.04,
+      "agent_tail": "Done. **SC-5** \u2014 \"A learner can measure a harness change\" \u2014 requires a **bootstrap confidence interval**. The eval runs `python3 tools/ablation.py validate <results>` and passes regardless of whether the interval crosses zero, because the point is reporting honestly.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['SC-5', 'bootstrap']\n"
+    },
+    {
+      "arm": "monolithic",
+      "task": "spec-lint-tool",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 22.98,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. The exact tool is **`tools/spec_lint.py`** \u2014 it validates that every Success Criterion is measurable, carries a named eval, and doesn't hide behind unfalsifiable adjectives. Answer written to ANSWER.md.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['spec_lint']\n"
+    },
+    {
+      "arm": "monolithic",
+      "task": "spec-lint-tool",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 15.06,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. The tool is **`tools/spec_lint.py`** \u2014 it checks that every Success Criterion is measurable, carries a named eval, and doesn't hide behind unfalsifiable adjectives.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['spec_lint']\n"
+    },
+    {
+      "arm": "monolithic",
+      "task": "spec-lint-tool",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 16.99,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. The exact tool is `tools/spec_lint.py`, which checks that every Success Criterion is measurable, carries a named eval, and doesn't hide behind unfalsifiable adjectives.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['spec_lint']\n"
+    },
+    {
+      "arm": "monolithic",
+      "task": "never-invent-rule",
+      "repeat": 0,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 18.79,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. The answer is in ANSWER.md.\n\nFrom the repo's AGENTS.md rules (the repo's source of truth): **Never invent a result.** Hand-written plausible tables are forbidden because they destroy the course's credibility. **`tools/ablation.py`** is the only tool that can produce valid results\u2014all numbers must come from real runs, including null and negative results.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['invent', 'ablation.py']\n"
+    },
+    {
+      "arm": "monolithic",
+      "task": "never-invent-rule",
+      "repeat": 1,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 14.89,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. The repo's core rule: **never invent results** \u2014 `tools/ablation.py` is the only authorized source. If numbers aren't ready, say so rather than making them up. This is how the course protects its measurement credibility, which is its only real differentiator.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['invent', 'ablation.py']\n"
+    },
+    {
+      "arm": "monolithic",
+      "task": "never-invent-rule",
+      "repeat": 2,
+      "passed": true,
+      "safety": null,
+      "agent_returncode": 0,
+      "agent_wall_sec": 19.44,
+      "verifier_wall_sec": 0.03,
+      "agent_tail": "Done. The repo's core rule is stated plainly in CLAUDE.md: **never invent a result.** `tools/ablation.py` is the only real source of truth for results. Hand-written numbers destroy the course's credibility, which is its only asset.\n",
+      "verifier_tail": "PASS: ANSWER.md contains all required terms: ['invent', 'ablation.py']\n"
+    }
+  ],
+  "summary": {
+    "per_arm": {
+      "structured": {
+        "n": 15,
+        "pass_rate": 1.0,
+        "median_agent_wall_sec": 19.5,
+        "per_task_pass_rate": {
+          "agents-md-limit": 1.0,
+          "never-invent-rule": 1.0,
+          "obsolete-section": 1.0,
+          "sc5-eval": 1.0,
+          "spec-lint-tool": 1.0
+        }
+      },
+      "monolithic": {
+        "n": 15,
+        "pass_rate": 1.0,
+        "median_agent_wall_sec": 15.0,
+        "per_task_pass_rate": {
+          "agents-md-limit": 1.0,
+          "never-invent-rule": 1.0,
+          "obsolete-section": 1.0,
+          "sc5-eval": 1.0,
+          "spec-lint-tool": 1.0
+        }
+      }
+    },
+    "comparison": {
+      "baseline_arm": "structured",
+      "treatment_arm": "monolithic",
+      "pass_rate_delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "crosses_zero": true
+    },
+    "comparisons": [
+      {
+        "baseline_arm": "structured",
+        "treatment_arm": "monolithic",
+        "pass_rate_delta": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "crosses_zero": true
+      }
+    ],
+    "safety": null
+  }
+}

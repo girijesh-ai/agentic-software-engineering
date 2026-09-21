@@ -51,8 +51,16 @@ if [ -d units ]; then
     done
 fi
 
-# 4. Internal markdown links resolve.
+# 4. Internal markdown links resolve. Skips results/lab-materials/: those
+# are frozen fixture snapshots (e.g. a unit's captured reference-implementation
+# or, per C2, a concatenated CLAUDE.md built from other docs' real content) -
+# their relative links were valid in the file's original location, not this
+# one, and re-validating them here would be checking the wrong path, not
+# the repo's live docs.
 while IFS= read -r -d '' md; do
+    case "$md" in
+        */results/lab-materials/*) continue ;;
+    esac
     dir=$(dirname "$md")
     while IFS= read -r link; do
         [ -z "$link" ] && continue
